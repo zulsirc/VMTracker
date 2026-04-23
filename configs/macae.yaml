@@ -38,14 +38,19 @@ study_area:
     max_lat: -22.370
   polygon:
     # [lon, lat] pairs — south-side urban core of Macaé.
-    - [-41.830, -22.468]
-    - [-41.735, -22.468]
-    - [-41.735, -22.383]
-    - [-41.770, -22.382]   # approaching the coast south of the river mouth
-    - [-41.790, -22.386]   # south of Ponte da Barra
-    - [-41.815, -22.395]   # western bank, south of river
-    - [-41.830, -22.410]
-    - [-41.830, -22.468]
+    # East edge hugs the coastline (no open-ocean cells).
+    - [-41.830, -22.468]  # SW
+    - [-41.790, -22.465]  # S, following the coast
+    - [-41.783, -22.455]  # Riviera / Costa do Sol
+    - [-41.780, -22.442]  # Praia Campista
+    - [-41.783, -22.425]  # Cavaleiros beach
+    - [-41.785, -22.410]  # Cavaleiros norte
+    - [-41.785, -22.395]  # Imbetiba
+    - [-41.783, -22.387]  # near river mouth (south bank)
+    - [-41.800, -22.386]  # south of Ponte da Barra
+    - [-41.815, -22.395]  # western bank, south of river
+    - [-41.830, -22.410]  # W
+    - [-41.830, -22.468]  # close
 
 # ----------------------------------------------------------------------------
 # Grid (H3 hexagons)
@@ -161,6 +166,9 @@ landuse_categories:
       - "landuse=port"
   unsuitable:
     # Heavy penalty: nature, water, airport, military, farm, wood.
+    # NOTE: natural=beach is deliberately NOT here — in Macaé's south zone
+    # the beach strip is high-traffic (kiosks, tourism, beachfront bars)
+    # and must not pull coastal urban cells down.
     query:
       - "landuse=forest"
       - "landuse=farmland"
@@ -168,7 +176,6 @@ landuse_categories:
       - "natural=wood"
       - "natural=wetland"
       - "natural=water"
-      - "natural=beach"
       - "landuse=military"
       - "aeroway=aerodrome"
       - "aeroway=runway"

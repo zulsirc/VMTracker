@@ -89,6 +89,7 @@ def assemble_feature_frame(
 def compute_score(
     features: pd.DataFrame,
     weights: dict[str, Any],
+    raw_unsuitable_frac: pd.Series | None = None,
 ) -> tuple[pd.Series, pd.DataFrame]:
     """Return (score_0_100, breakdown_frame).
 
@@ -149,8 +150,9 @@ def compute_score(
     # Blend two normalizations so the final score is both:
     #   1) ordinally correct     (preserves rank)
     #   2) visually distributed  (no giant mass at a single bucket)
-    # (a) physical: min / p97 -> 0..1, sqrt-shaped to expand low-mid
-    # (b) rank:     percentile rank of raw (0..1), naturally uniform
+    # Physical dominates (70%) — rank only adds spread in the low band so
+    # the map reads with nuance instead of collapsing empty cells into one
+    # bucket. Previous 60%-rank blend was inflating empty cells to "médio".
     lo = float(raw.min())
     hi = float(np.nanpercentile(raw, 97))
     if not np.isfinite(lo) or not np.isfinite(hi) or hi - lo < 1e-9:
@@ -160,16 +162,25 @@ def compute_score(
 
     rank_pct = raw.rank(pct=True, method="average").astype(float)
 
-    # 40% physical + 60% rank — rank dominates but physical preserves
-    # the identity of true low-end (isolated) and true top-end (dense) cells.
-    mixed = 0.4 * physical + 0.6 * rank_pct
+    mixed = 0.70 * physical + 0.30 * rank_pct
     scaled = (mixed * 100.0).clip(0.0, 100.0)
+
+    # Empty-cell guard: cells that have *no* real urban substance (no
+    # commercial, no residential, no road density, no mixed-use) cannot
+    # be "médio" just because they rank in the middle of an empty tail.
+    # Cap them at 30 so they read as "ruim" regardless of rank.
+    core_cols = ["commercial", "residential", "road_density", "mixed_use"]
+    core = features[[c for c in core_cols if c in features.columns]].sum(axis=1)
+    empty_mask = core < 1e-6
+    scaled[empty_mask] = np.minimum(scaled[empty_mask], 30.0)
 
     # Hard safeguard: cells dominated by unsuitable landuse (water, wood,
     # airport, military, wetland, farmland) must never read "green" no
-    # matter what accidental POI exists.
-    if "unsuitable_frac" in features.columns:
-        hard_mask = features["unsuitable_frac"] > 0.6
+    # matter what accidental POI exists. We use the RAW (un-smoothed)
+    # cell-own fraction so neighbors' unsuitable landuse doesn't produce
+    # false-negatives for legitimate urban cells adjacent to parks.
+    if raw_unsuitable_frac is not None:
+        hard_mask = raw_unsuitable_frac > 0.5
         scaled[hard_mask] = np.minimum(scaled[hard_mask], 15.0)
 
     scaled = scaled.clip(0.0, 100.0)

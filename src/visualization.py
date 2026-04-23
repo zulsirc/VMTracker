@@ -90,10 +90,10 @@ def build_map(
         control_scale=True,
     )
     folium.TileLayer(
-        "CartoDB positron", name="Carto Positron", control=True
+        "CartoDB positron", name="Carto Positron", control=True, show=False
     ).add_to(m)
     folium.TileLayer(
-        "CartoDB dark_matter", name="Carto Dark", control=True
+        "CartoDB dark_matter", name="Carto Dark", control=True, show=False
     ).add_to(m)
 
     cm = _make_colormap()

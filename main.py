@@ -135,7 +135,12 @@ def run(cfg: dict[str, Any]) -> dict[str, Any]:
     )
 
     # --- Score ---------------------------------------------------------
-    score, breakdown = S.compute_score(features, cfg["weights"])
+    raw_unsuitable = landuse_df.get(
+        "lu_frac_unsuitable", pd.Series(0.0, index=grid.index)
+    )
+    score, breakdown = S.compute_score(
+        features, cfg["weights"], raw_unsuitable_frac=raw_unsuitable
+    )
     cls = S.classify(score)
 
     grid_scored = grid.copy()
@@ -148,6 +153,30 @@ def run(cfg: dict[str, Any]) -> dict[str, Any]:
     # also expose a few raw counts for inspection
     for col in poi_counts.columns:
         grid_scored[col] = poi_counts[col].values
+    # raw feature values (before weighting) — useful for auditing
+    for feat_col in (
+        "unsuitable_frac",
+        "industrial_frac",
+        "residential",
+        "commercial",
+        "road_density",
+        "mixed_use",
+        "isolation",
+        "anchor_proximity",
+        "low_connectivity",
+    ):
+        if feat_col in features.columns:
+            grid_scored[f"feat_{feat_col}"] = features[feat_col].values
+    # raw (un-smoothed) landuse fractions — so audits can distinguish
+    # "this cell is itself unsuitable" from "a neighbor is".
+    for lu_col in (
+        "lu_frac_unsuitable",
+        "lu_frac_residential",
+        "lu_frac_commercial",
+        "lu_frac_industrial",
+    ):
+        if lu_col in landuse_df.columns:
+            grid_scored[f"raw_{lu_col}"] = landuse_df[lu_col].values
 
     # --- Outputs -------------------------------------------------------
     geojson_path = out_dir / cfg["output"]["geojson"]
