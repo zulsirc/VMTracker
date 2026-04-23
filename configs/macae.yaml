@@ -1,0 +1,255 @@
+# ============================================================================
+# Vending Machine Heatmap  --  Macaé / RJ
+# ============================================================================
+# This config drives the entire pipeline. To run for another city, copy this
+# file, adjust the study area polygon + bbox and re-run.
+# ============================================================================
+
+city:
+  name: "Macaé"
+  slug: "macae"
+  country: "BR"
+
+# ----------------------------------------------------------------------------
+# Study area
+# ----------------------------------------------------------------------------
+# The user asked specifically to focus on Macaé's consolidated urban area,
+# on the MAIN side before Ponte da Barra. That means:
+#   - include:   Centro, Imbetiba, Cavaleiros, Granja dos Cavaleiros,
+#                Glória, Praia Campista, Costa do Sol, Riviera, Lagomar,
+#                Nova Holanda, Bosque Azul, Visconde de Araújo, etc.
+#   - exclude:   Barra de Macaé (the strip north of Rio Macaé), aeroporto,
+#                Imboassica industrial, rural periphery.
+#
+# The polygon below approximates that cut. Rio Macaé flows roughly
+# west→east and reaches the sea at the Ponte da Barra; the polygon
+# stays south/southwest of that line.
+#
+# If you need to change it, keep vertices in [lon, lat] order and go
+# counter-clockwise or clockwise consistently.
+# ----------------------------------------------------------------------------
+study_area:
+  bbox:
+    # Rough outer bbox used ONLY to narrow Overpass queries.
+    # Real clip is done by the polygon below.
+    min_lon: -41.830
+    min_lat: -22.470
+    max_lon: -41.735
+    max_lat: -22.370
+  polygon:
+    # [lon, lat] pairs — south-side urban core of Macaé.
+    - [-41.830, -22.468]
+    - [-41.735, -22.468]
+    - [-41.735, -22.383]
+    - [-41.770, -22.382]   # approaching the coast south of the river mouth
+    - [-41.790, -22.386]   # south of Ponte da Barra
+    - [-41.815, -22.395]   # western bank, south of river
+    - [-41.830, -22.410]
+    - [-41.830, -22.468]
+
+# ----------------------------------------------------------------------------
+# Grid (H3 hexagons)
+# ----------------------------------------------------------------------------
+# res 9  ≈ 174m edge / ~0.10 km² per cell  — recommended for ~150-300m cells
+# res 10 ≈ 66m  edge / ~0.015 km²         — finer, but heavier
+grid:
+  type: "h3"
+  h3_resolution: 9
+
+# ----------------------------------------------------------------------------
+# Overpass / data sources
+# ----------------------------------------------------------------------------
+overpass:
+  endpoint: "https://overpass-api.de/api/interpreter"
+  timeout_s: 180
+  retries: 3
+  retry_backoff_s: 5
+  cache_dir: "output/cache"
+
+# ----------------------------------------------------------------------------
+# POI categories we pull from OSM
+# Each category accumulates one "feature count" per cell.
+# Weights below combine them into the final score.
+# ----------------------------------------------------------------------------
+poi_categories:
+  shop:
+    query:
+      - "shop"
+  supermarket:
+    query:
+      - "shop=supermarket"
+      - "shop=convenience"
+      - "shop=mall"
+      - "shop=department_store"
+  food:
+    query:
+      - "amenity=restaurant"
+      - "amenity=fast_food"
+      - "amenity=cafe"
+      - "amenity=bar"
+      - "amenity=food_court"
+      - "amenity=ice_cream"
+  pharmacy:
+    query:
+      - "amenity=pharmacy"
+      - "healthcare=pharmacy"
+  healthcare:
+    query:
+      - "amenity=hospital"
+      - "amenity=clinic"
+      - "amenity=doctors"
+      - "healthcare=clinic"
+      - "healthcare=hospital"
+      - "healthcare=doctor"
+  education:
+    query:
+      - "amenity=school"
+      - "amenity=college"
+      - "amenity=university"
+      - "amenity=kindergarten"
+      - "amenity=language_school"
+  fitness:
+    query:
+      - "leisure=fitness_centre"
+      - "leisure=sports_centre"
+      - "sport=fitness"
+  office:
+    query:
+      - "office"
+      - "amenity=coworking_space"
+  bank:
+    query:
+      - "amenity=bank"
+      - "amenity=atm"
+  transport:
+    query:
+      - "highway=bus_stop"
+      - "public_transport=stop_position"
+      - "public_transport=platform"
+      - "amenity=bus_station"
+      - "railway=station"
+  leisure:
+    query:
+      - "leisure=park"
+      - "leisure=playground"
+      - "leisure=stadium"
+      - "tourism=attraction"
+      - "tourism=hotel"
+  fuel:
+    query:
+      - "amenity=fuel"
+
+# ----------------------------------------------------------------------------
+# Landuse / context (used for penalties + context, NOT scored as POI count)
+# ----------------------------------------------------------------------------
+landuse_categories:
+  residential:
+    query:
+      - "landuse=residential"
+      - "building=residential"
+      - "building=apartments"
+  commercial:
+    query:
+      - "landuse=commercial"
+      - "landuse=retail"
+      - "building=commercial"
+      - "building=retail"
+  industrial:
+    query:
+      - "landuse=industrial"
+      - "building=industrial"
+      - "landuse=port"
+  unsuitable:
+    # Heavy penalty: nature, water, airport, military, farm, wood.
+    query:
+      - "landuse=forest"
+      - "landuse=farmland"
+      - "landuse=meadow"
+      - "natural=wood"
+      - "natural=wetland"
+      - "natural=water"
+      - "natural=beach"
+      - "landuse=military"
+      - "aeroway=aerodrome"
+      - "aeroway=runway"
+
+# ----------------------------------------------------------------------------
+# Roads (used for connectivity signal)
+# ----------------------------------------------------------------------------
+roads:
+  query:
+    - "highway=primary"
+    - "highway=secondary"
+    - "highway=tertiary"
+    - "highway=residential"
+    - "highway=trunk"
+    - "highway=unclassified"
+    - "highway=living_street"
+
+# ----------------------------------------------------------------------------
+# Scoring weights (positive features)
+# ----------------------------------------------------------------------------
+# These are applied AFTER per-feature normalization to [0,1] and AFTER
+# spatial smoothing over cell neighborhoods.
+# ----------------------------------------------------------------------------
+weights:
+  positive:
+    food:          1.6
+    shop:          1.4
+    supermarket:   1.3
+    pharmacy:      1.1
+    fitness:       1.0
+    education:     1.2
+    healthcare:    1.0
+    office:        1.0
+    bank:          0.7
+    transport:     1.1
+    leisure:       0.6
+    fuel:          0.5
+    residential:   1.0   # density of residential footprints
+    commercial:    1.2   # density of commercial footprints
+    mixed_use:        1.5   # diversity across categories
+    road_density:     1.0   # connectivity signal
+    anchor_proximity: 1.8   # distance-decay to nearest strong POI (continuous)
+
+  # Penalties subtract from the raw score before clipping to 0..100.
+  # We keep unsuitable_landuse strong (nature/water/airport must read deep red)
+  # and isolation/low_connectivity softer so urban-but-quiet cells still get
+  # differentiated nuance instead of piling up on a single red bucket.
+  penalties:
+    unsuitable_landuse: 2.2   # water / wood / farmland / airport etc
+    industrial:         0.4   # light penalty
+    isolation:          0.9   # few POIs in surrounding cells → isolated
+    low_connectivity:   0.4   # very little road length
+
+# ----------------------------------------------------------------------------
+# Spatial smoothing — simulate walking/catchment radius.
+# Each cell is enriched by the sum of its ring neighbors' POIs,
+# attenuated by 'decay' per ring.
+# ----------------------------------------------------------------------------
+smoothing:
+  neighbor_rings: 3
+  decay: 0.6
+
+# ----------------------------------------------------------------------------
+# Output
+# ----------------------------------------------------------------------------
+output:
+  dir: "output"
+  html: "macae_vending_heatmap.html"
+  geojson: "macae_grid_scores.geojson"
+  csv_top: "macae_top_cells.csv"
+  csv_all: "macae_all_cells.csv"
+  report_md: "macae_report.md"
+  top_n: 40
+
+# ----------------------------------------------------------------------------
+# Map rendering
+# ----------------------------------------------------------------------------
+map:
+  center: [-22.412, -41.793]   # Cavaleiros area — good default view
+  zoom_start: 13
+  fill_opacity: 0.55
+  line_opacity: 0.15
+  include_heatmap_layer: true  # also render a smoothed Leaflet heatmap overlay
+  include_top_markers: true

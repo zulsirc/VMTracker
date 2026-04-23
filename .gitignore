@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+.env
+# keep output/ committed so the generated HTML is visible on the branch,
+# but skip the raw Overpass cache (large, regenerable)
+output/cache/
