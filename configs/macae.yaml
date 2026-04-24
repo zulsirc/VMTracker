@@ -246,6 +246,22 @@ clusters:
   min_cells: 2            # cluster must have at least this many cells
   top_n: 10               # how many clusters to surface in shortlist / map / KML
   peak_radius_rings: 2    # min H3 distance between two seeds (≈ ~350m)
+  super_cluster_merge_m: 650.0     # merge micro-clusters if centroid distance <= this
+  super_cluster_seed_rings: 3      # OR if their seed cells are <= N H3 rings apart
+
+# ----------------------------------------------------------------------------
+# Operational scenario
+# ----------------------------------------------------------------------------
+# - convenience_urban: discount cells whose value is driven by beach/orla
+# - beach_tourism:     mild boost for beach-adjacent cells
+scenario: "convenience_urban"
+
+# ----------------------------------------------------------------------------
+# Field-visit routing
+# ----------------------------------------------------------------------------
+routing:
+  max_stops_day1: 5
+  max_stops_day2: 6
 
 # ----------------------------------------------------------------------------
 # Output

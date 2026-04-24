@@ -17,6 +17,7 @@ def build_field_review_map(
     *,
     study_polygon_wkt: str | None,
     cfg: dict[str, Any],
+    super_cluster_meta: pd.DataFrame | None = None,
 ) -> folium.Map:
     m = folium.Map(
         location=cfg["map"]["center"],
@@ -39,6 +40,31 @@ def build_field_review_map(
             ).add_to(m)
         except Exception:
             pass
+
+    # super-cluster polygons (shown more prominently than micro)
+    if super_cluster_meta is not None and not super_cluster_meta.empty:
+        for _, srow in super_cluster_meta.iterrows():
+            cells = grid.iloc[srow["cell_idx"]]
+            try:
+                geom = unary_union(cells.geometry.values).buffer(0)
+            except Exception:
+                continue
+            color = {"alta": "#7a00d9", "média": "#b17bff", "baixa": "#dcdcdc"}.get(
+                srow["prioridade_visita"], "#7a00d9"
+            )
+            folium.GeoJson(
+                gpd.GeoSeries([geom], crs="EPSG:4326").to_json(),
+                style_function=lambda f, c=color: {
+                    "color": c, "weight": 3, "fillColor": c, "fillOpacity": 0.12,
+                },
+                tooltip=(
+                    f"<b>Super #{int(srow['super_cluster_id'])}</b> — "
+                    f"{srow['bairro_principal']}<br>"
+                    f"{int(srow['n_micro_clusters'])} micro-clusters · "
+                    f"{int(srow['n_cells_total'])} cells · score "
+                    f"{srow['score_medio']:.0f}"
+                ),
+            ).add_to(m)
 
     # cluster polygons
     for _, row in cluster_meta.head(int(cfg.get("clusters", {}).get("top_n", 10))).iterrows():
@@ -67,11 +93,16 @@ def build_field_review_map(
         layer = classes_layer.get(prio, classes_layer["média"])
         lat, lon = row["lat"], row["lon"]
         cid = int(row["cluster_id"])
+        actionability = row.get("actionability_score", None)
+        act_str = (
+            f"<br>Actionability: <b>{float(actionability):.1f}</b>"
+            if actionability is not None and pd.notna(actionability) else ""
+        )
         popup_html = f"""
         <div style="font:12px sans-serif;min-width:240px">
           <div style="font-size:14px"><b>#{int(row['cluster_rank'])} — {row['bairro_aproximado']}</b></div>
           Cluster #{cid} · prioridade <b>{prio}</b><br>
-          score médio <b>{row['score_cluster']}</b> · máx <b>{row['score_max_cell']}</b><br>
+          score médio <b>{row['score_cluster']}</b> · máx <b>{row['score_max_cell']}</b>{act_str}<br>
           <i>{row['principais_sinais']}</i><br>
           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">
             <code>{lat:.6f}, {lon:.6f}</code>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Rota de campo — Dia 2</name>
+    <Placemark>
+      <name>Rota de campo — Dia 2 — rota</name>
+      <LineString><tessellate>1</tessellate>
+        <coordinates>-41.787859,-22.404625,0 -41.815236,-22.415902,0</coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>#1 — Glória (baixa)</name>
+      <description><![CDATA[
+        Cluster: 8 | Super: 3<br/>
+        Score médio: 81.7<br/>
+        1 micro-cluster(s) unidos; 6 cells; score médio 82; diversidade de usos + alimentação + proximidade a âncoras + comércio.<br/><br/>
+        <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
+      ]]></description>
+      <Point><coordinates>-41.787859,-22.404625,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>#2 — Virgem Santa (baixa)</name>
+      <description><![CDATA[
+        Cluster: 12 | Super: 7<br/>
+        Score médio: 59.1<br/>
+        1 micro-cluster(s) unidos; 3 cells; score médio 59; proximidade a âncoras + diversidade de usos + educação + academia.<br/><br/>
+        <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
+      ]]></description>
+      <Point><coordinates>-41.815236,-22.415902,0</coordinates></Point>
+    </Placemark>
+  </Document>
+</kml>

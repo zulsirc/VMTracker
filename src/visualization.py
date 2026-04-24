@@ -155,14 +155,17 @@ def _add_grid_layer(
             g.to_json(),
             style_function=_gradient_style(value_col, cm, fill_opacity, line_opacity),
             tooltip=folium.features.GeoJsonTooltip(
-                fields=["score", "direct_activity_score", "neighborhood_inherited_score",
-                        "class", "bairro", "cluster_id"],
-                aliases=["Score final:", "Atividade própria:", "Herdada vizinhos:",
-                         "Classe:", "Bairro:", "Cluster:"],
+                fields=["score", "actionability_score",
+                        "direct_activity_score", "neighborhood_inherited_score",
+                        "priority_tier", "class", "bairro", "cluster_id"],
+                aliases=["Score final:", "Actionability:", "Atividade própria:",
+                         "Herdada vizinhos:", "Tier:", "Classe:", "Bairro:", "Cluster:"],
                 sticky=True, labels=True, localize=True,
             ),
             popup=folium.features.GeoJsonPopup(
-                fields=["score", "direct_activity_score", "neighborhood_inherited_score",
+                fields=["score", "actionability_score",
+                        "direct_activity_score", "neighborhood_inherited_score",
+                        "priority_tier", "flag_visual_review",
                         "class", "bairro", "cluster_id",
                         "pos_food", "pos_shop", "pos_supermarket", "pos_pharmacy",
                         "pos_education", "pos_fitness", "pos_healthcare", "pos_office",
@@ -171,8 +174,10 @@ def _add_grid_layer(
                         "pos_anchor_proximity",
                         "pen_unsuitable_landuse", "pen_industrial",
                         "pen_isolation", "pen_low_connectivity"],
-                aliases=["Score:", "Atividade própria:", "Herdada:", "Classe:",
-                         "Bairro:", "Cluster:",
+                aliases=["Score final:", "Actionability:",
+                         "Atividade própria:", "Herdada:",
+                         "Tier:", "Flags:",
+                         "Classe:", "Bairro:", "Cluster:",
                          "alimentação:", "comércio:", "mercado:", "farmácia:",
                          "educação:", "academia:", "saúde:", "escritórios:",
                          "transporte:", "bancos:", "lazer:", "residencial:",
@@ -196,6 +201,7 @@ def build_map(
     top_cells: pd.DataFrame | None = None,
     study_polygon_wkt: str | None = None,
     cluster_meta: pd.DataFrame | None = None,
+    super_cluster_meta: pd.DataFrame | None = None,
     bottom_cells: pd.DataFrame | None = None,
     poi_layers: dict[str, gpd.GeoDataFrame] | None = None,
 ) -> folium.Map:
@@ -313,6 +319,53 @@ def build_map(
             ).add_to(labels_layer)
         cluster_layer.add_to(m)
         labels_layer.add_to(m)
+
+    # Super-clusters as merged polygons + labels
+    if super_cluster_meta is not None and not super_cluster_meta.empty:
+        sc_layer = folium.FeatureGroup(name="🏙️ Super clusters (polygon)", show=True)
+        sc_labels = folium.FeatureGroup(name="🏙️ Super clusters (labels)", show=True)
+        for _, row in super_cluster_meta.iterrows():
+            cells = grid.iloc[row["cell_idx"]]
+            try:
+                geom = unary_union(cells.geometry.values).buffer(0)
+            except Exception:
+                continue
+            color = {"alta": "#7a00d9", "média": "#b17bff", "baixa": "#cfcfcf"}.get(
+                row["prioridade_visita"], "#7a00d9"
+            )
+            folium.GeoJson(
+                gpd.GeoSeries([geom], crs="EPSG:4326").to_json(),
+                style_function=lambda f, c=color: {
+                    "color": c, "weight": 4, "fill": True, "fillColor": c,
+                    "fillOpacity": 0.08,
+                },
+                tooltip=(
+                    f"<b>Super #{int(row['super_cluster_id'])}</b> · "
+                    f"{row['bairro_principal']}<br>"
+                    f"micro-clusters unidos: {int(row['n_micro_clusters'])}<br>"
+                    f"{int(row['n_cells_total'])} cells, score médio "
+                    f"{row['score_medio']:.0f}, "
+                    f"direct share {row['direct_share_medio']*100:.0f}%<br>"
+                    f"<i>{row['principais_sinais']}</i>"
+                ),
+            ).add_to(sc_layer)
+            folium.Marker(
+                location=[row["centroid_lat"], row["centroid_lon"]],
+                icon=folium.DivIcon(
+                    html=(
+                        f"<div style='background:{color};color:white;"
+                        f"border-radius:6px;padding:2px 6px;"
+                        f"font-weight:bold;font-size:13px;"
+                        f"border:2px solid white;white-space:nowrap;"
+                        f"box-shadow:0 0 4px rgba(0,0,0,.5)'>"
+                        f"S#{int(row['super_cluster_id'])} · "
+                        f"{row['bairro_principal']}</div>"
+                    ),
+                    icon_size=(120, 22), icon_anchor=(60, 11),
+                ),
+            ).add_to(sc_labels)
+        sc_layer.add_to(m)
+        sc_labels.add_to(m)
 
     # Top-40 markers
     if top_cells is not None and not top_cells.empty:

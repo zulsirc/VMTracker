@@ -125,6 +125,9 @@ def test_build_map_smoke(cfg, tmp_path):
     grid["direct_activity_score"] = grid["score"] * 0.7
     grid["neighborhood_inherited_score"] = grid["score"] * 0.3
     grid["penalty_total"] = 0.0
+    grid["actionability_score"] = grid["score"] * 0.9
+    grid["priority_tier"] = "validar_visualmente"
+    grid["flag_visual_review"] = ""
     for col in [
         "pos_food","pos_shop","pos_supermarket","pos_pharmacy","pos_education",
         "pos_fitness","pos_healthcare","pos_office","pos_transport","pos_bank",

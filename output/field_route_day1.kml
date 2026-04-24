@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Rota de campo — Dia 1</name>
+    <Placemark>
+      <name>Rota de campo — Dia 1 — rota</name>
+      <LineString><tessellate>1</tessellate>
+        <coordinates>-41.794098,-22.392583,0 -41.799451,-22.405285,0 -41.809784,-22.409954,0 -41.821638,-22.404098,0 -41.811657,-22.397076,0</coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>#1 — Visconde de Araújo (alta)</name>
+      <description><![CDATA[
+        Cluster: 3|4|9 | Super: 2<br/>
+        Score médio: 83.1<br/>
+        3 micro-cluster(s) unidos; 26 cells; score médio 83; proximidade a âncoras + diversidade de usos + comércio + conectividade viária.<br/><br/>
+        <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
+      ]]></description>
+      <Point><coordinates>-41.794098,-22.392583,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>#2 — Glória (alta)</name>
+      <description><![CDATA[
+        Cluster: 1|2|5 | Super: 1<br/>
+        Score médio: 91.7<br/>
+        3 micro-cluster(s) unidos; 26 cells; score médio 92; diversidade de usos + proximidade a âncoras + alimentação + mercado/conveniência.<br/><br/>
+        <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
+      ]]></description>
+      <Point><coordinates>-41.799451,-22.405285,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>#3 — Bosque Azul (média)</name>
+      <description><![CDATA[
+        Cluster: 7|10 | Super: 5<br/>
+        Score médio: 71.5<br/>
+        2 micro-cluster(s) unidos; 15 cells; score médio 72; proximidade a âncoras + diversidade de usos + transporte + mercado/conveniência.<br/><br/>
+        <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
+      ]]></description>
+      <Point><coordinates>-41.809784,-22.409954,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>#4 — Bosque Azul (média)</name>
+      <description><![CDATA[
+        Cluster: 11 | Super: 6<br/>
+        Score médio: 64.4<br/>
+        1 micro-cluster(s) unidos; 4 cells; score médio 64; proximidade a âncoras + diversidade de usos + educação + transporte.<br/><br/>
+        <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
+      ]]></description>
+      <Point><coordinates>-41.821638,-22.404098,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>#5 — Nova Holanda (alta)</name>
+      <description><![CDATA[
+        Cluster: 6 | Super: 4<br/>
+        Score médio: 78.2<br/>
+        1 micro-cluster(s) unidos; 10 cells; score médio 78; proximidade a âncoras + diversidade de usos + escritórios + mercado/conveniência.<br/><br/>
+        <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
+      ]]></description>
+      <Point><coordinates>-41.811657,-22.397076,0</coordinates></Point>
+    </Placemark>
+  </Document>
+</kml>

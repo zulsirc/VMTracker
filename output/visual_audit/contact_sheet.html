@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-br"><head><meta charset="utf-8"/>
+<title>Visual audit — Macaé Vending Heatmap</title>
+<style>
+  body { font-family: system-ui, sans-serif; background:#f3f3f3; margin:0; padding:24px; }
+  h1 { font-size:20px; margin:0 0 12px 0; }
+  .grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
+  @media (min-width:1200px) { .grid { grid-template-columns:repeat(4, 1fr); } }
+  p.note { font-size:12px; color:#555; }
+</style></head><body>
+  <h1>Visual audit — Macaé Vending Heatmap</h1>
+  <p class="note">
+    Os mesmos PNG estão listados abaixo. Cada um tem um arquivo <code>.md</code>
+    ao lado com o verdict esperado (TP / FP / TN / FN). Veja também
+    <a href="contact_sheet.png">contact_sheet.png</a> (mosaico).
+  </p>
+  <div class="grid">
+        <figure style="margin:0;border:1px solid #ddd;background:#fff">
+          <img src="01_overview.png" style="width:100%;display:block" alt="Visão geral da cidade (recorte completo)"/>
+          <figcaption style="padding:6px 10px;font:13px sans-serif;background:#222;color:#fff">
+            1. Visão geral da cidade (recorte completo)
+          </figcaption>
+        </figure>
+        <figure style="margin:0;border:1px solid #ddd;background:#fff">
+          <img src="02_cluster_top_1.png" style="width:100%;display:block" alt="Top cluster #1 — Glória"/>
+          <figcaption style="padding:6px 10px;font:13px sans-serif;background:#222;color:#fff">
+            2. Top cluster #1 — Glória
+          </figcaption>
+        </figure>
+        <figure style="margin:0;border:1px solid #ddd;background:#fff">
+          <img src="03_cluster_top_2.png" style="width:100%;display:block" alt="Top cluster #2 — Nova Holanda"/>
+          <figcaption style="padding:6px 10px;font:13px sans-serif;background:#222;color:#fff">
+            3. Top cluster #2 — Nova Holanda
+          </figcaption>
+        </figure>
+        <figure style="margin:0;border:1px solid #ddd;background:#fff">
+          <img src="04_cluster_top_3.png" style="width:100%;display:block" alt="Top cluster #3 — Morro de São Jorge"/>
+          <figcaption style="padding:6px 10px;font:13px sans-serif;background:#222;color:#fff">
+            4. Top cluster #3 — Morro de São Jorge
+          </figcaption>
+        </figure>
+        <figure style="margin:0;border:1px solid #ddd;background:#fff">
+          <img src="05_mid_zone.png" style="width:100%;display:block" alt="Faixa média (40-60) — transição"/>
+          <figcaption style="padding:6px 10px;font:13px sans-serif;background:#222;color:#fff">
+            5. Faixa média (40-60) — transição
+          </figcaption>
+        </figure>
+        <figure style="margin:0;border:1px solid #ddd;background:#fff">
+          <img src="06_bad_area.png" style="width:100%;display:block" alt="Área classificada ruim"/>
+          <figcaption style="padding:6px 10px;font:13px sans-serif;background:#222;color:#fff">
+            6. Área classificada ruim
+          </figcaption>
+        </figure>
+        <figure style="margin:0;border:1px solid #ddd;background:#fff">
+          <img src="07_polygon_border.png" style="width:100%;display:block" alt="Borda norte do polígono (perto da Ponte da Barra)"/>
+          <figcaption style="padding:6px 10px;font:13px sans-serif;background:#222;color:#fff">
+            7. Borda norte do polígono (perto da Ponte da Barra)
+          </figcaption>
+        </figure>
+        <figure style="margin:0;border:1px solid #ddd;background:#fff">
+          <img src="08_transition.png" style="width:100%;display:block" alt="Transição forte verde→vermelho (oeste-leste)"/>
+          <figcaption style="padding:6px 10px;font:13px sans-serif;background:#222;color:#fff">
+            8. Transição forte verde→vermelho (oeste-leste)
+          </figcaption>
+        </figure></div>
+</body></html>

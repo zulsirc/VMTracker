@@ -355,11 +355,171 @@ def run(cfg: dict[str, Any]) -> dict[str, Any]:
 
     # spatial validation CSV with auto-flags
     spv = _build_spatial_validation(grid_scored, cluster_meta)
-    spv_path = out_dir.parent / "VMTracker" / "output" / "audit" / "spatial_validation.csv"
     spv_path = out_dir / "audit" / "spatial_validation.csv"
     spv_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # attach flags into grid_scored too (for actionability)
+    flags_by_h3 = dict(zip(spv["h3"], spv["flag_visual_review"].fillna("")))
+    grid_scored["flag_visual_review"] = [
+        flags_by_h3.get(h, "") for h in grid_scored["h3"]
+    ]
+
+    # --- Actionability -------------------------------------------------
+    from src import actionability as ACT
+    act = ACT.compute_actionability(grid_scored, grid_scored["flag_visual_review"])
+    grid_scored["actionability_score"] = act.values
+    tier = ACT.priority_tier(grid_scored, act, grid_scored["flag_visual_review"])
+    grid_scored["priority_tier"] = tier.values
+    LOG.info(
+        "actionability: mean=%.1f median=%.1f",
+        float(act.mean()), float(act.median()),
+    )
+
+    # push actionability + tier into spv for export
+    spv["actionability_score"] = [
+        float(grid_scored.loc[grid_scored["h3"] == h, "actionability_score"].iloc[0])
+        for h in spv["h3"]
+    ]
+    spv["priority_tier"] = [
+        str(grid_scored.loc[grid_scored["h3"] == h, "priority_tier"].iloc[0])
+        for h in spv["h3"]
+    ]
     spv.to_csv(spv_path, index=False)
     LOG.info("wrote %s", spv_path)
+
+    # field_route_priority.csv — all cells with tier != "-", ranked by tier+act
+    fr_prio = grid_scored[grid_scored["priority_tier"] != "-"][[
+        "h3", "lat", "lon", "bairro", "cluster_id",
+        "score", "direct_activity_score", "neighborhood_inherited_score",
+        "actionability_score", "priority_tier", "flag_visual_review",
+    ]].copy()
+    fr_prio.columns = [
+        "h3", "lat", "lon", "bairro", "cluster_id",
+        "score_final", "direct_activity_score", "inherited_score",
+        "actionability_score", "priority_tier", "flags",
+    ]
+    tier_order = {"visitar_agora": 0, "validar_visualmente": 1, "suspeita_halo": 2}
+    fr_prio["_t"] = fr_prio["priority_tier"].map(tier_order).fillna(3)
+    fr_prio = fr_prio.sort_values(
+        ["_t", "actionability_score"], ascending=[True, False]
+    ).drop(columns="_t").reset_index(drop=True)
+    fr_prio.to_csv(out_dir / "field_route_priority.csv", index=False)
+    LOG.info("wrote %s", out_dir / "field_route_priority.csv")
+
+    # refresh shortlist with actionability_score
+    cells_by_h3 = grid_scored.set_index("h3")
+    act_by_cluster = (
+        grid_scored[grid_scored["cluster_id"] > 0]
+        .groupby("cluster_id")["actionability_score"].mean().round(2)
+    )
+    short["actionability_score"] = short["cluster_id"].map(act_by_cluster)
+    short.to_csv(short_path, index=False)
+
+    # --- Super-clusters ------------------------------------------------
+    from src import super_clusters as SC
+    merge_m = float(cfg.get("clusters", {}).get("super_cluster_merge_m", 400.0))
+    seed_rings = int(cfg.get("clusters", {}).get("super_cluster_seed_rings", 2))
+    super_meta = SC.build_super_clusters(
+        grid_scored, cluster_meta,
+        merge_distance_m=merge_m,
+        seed_h3_distance=seed_rings,
+    )
+    LOG.info(
+        "super-clusters built: %d (merge_m=%.0f)",
+        len(super_meta), merge_m,
+    )
+
+    if not super_meta.empty:
+        # add actionability share
+        sc_act = []
+        for _, srow in super_meta.iterrows():
+            cells = grid_scored.iloc[srow["cell_idx"]]
+            sc_act.append(round(float(cells["actionability_score"].mean()), 2))
+        super_meta["actionability_medio"] = sc_act
+
+        # export CSV (skip list columns that are hard to CSV-serialize)
+        sc_csv = super_meta.copy()
+        sc_csv["bairros"] = sc_csv["bairros"].apply(lambda v: ";".join(map(str, v)))
+        sc_csv["micro_cluster_ids"] = sc_csv["micro_cluster_ids"].apply(
+            lambda v: ";".join(map(str, v))
+        )
+        sc_csv.drop(columns=["cell_idx"]).to_csv(
+            out_dir / "super_clusters.csv", index=False,
+        )
+        LOG.info("wrote %s", out_dir / "super_clusters.csv")
+
+        # GeoJSON of super-cluster polygon unions
+        from shapely.geometry import mapping
+        from shapely.ops import unary_union
+        import json as _json
+
+        feats_sc: list[dict[str, Any]] = []
+        for _, row in super_meta.iterrows():
+            cells = grid_scored.iloc[row["cell_idx"]]
+            try:
+                geom = unary_union(cells.geometry.values).buffer(0)
+            except Exception:
+                continue
+            feats_sc.append({
+                "type": "Feature",
+                "geometry": mapping(geom),
+                "properties": {
+                    "super_cluster_id": int(row["super_cluster_id"]),
+                    "micro_cluster_ids": list(row["micro_cluster_ids"]),
+                    "bairro_principal": row["bairro_principal"],
+                    "bairros": list(row["bairros"]),
+                    "n_micro_clusters": int(row["n_micro_clusters"]),
+                    "n_cells_total": int(row["n_cells_total"]),
+                    "score_medio": float(row["score_medio"]),
+                    "score_max": float(row["score_max"]),
+                    "inherited_share_medio": float(row["inherited_share_medio"]),
+                    "direct_share_medio": float(row["direct_share_medio"]),
+                    "actionability_medio": float(row["actionability_medio"]),
+                    "raio_m": float(row["raio_m"]),
+                    "principais_sinais": row["principais_sinais"],
+                    "justificativa": row["justificativa"],
+                    "prioridade_visita": row["prioridade_visita"],
+                },
+            })
+        sc_gj_path = out_dir / "super_clusters.geojson"
+        with sc_gj_path.open("w", encoding="utf-8") as fh:
+            _json.dump({"type": "FeatureCollection", "features": feats_sc},
+                       fh, ensure_ascii=False)
+        LOG.info("wrote %s", sc_gj_path)
+
+    # --- Scenario comparison -------------------------------------------
+    from src import scenarios as SCE
+    beach_raw = ds.fetch_landuse("beach", SCE.BEACH_TAGS)
+    beach_gdf = G.polygons_from_overpass(beach_raw)
+    if not beach_gdf.empty:
+        beach_gdf = G.clip_to_polygon(beach_gdf, poly)
+    LOG.info("beach polygons: %d", len(beach_gdf))
+
+    beach_prox = SCE.compute_beach_proximity(grid_scored, beach_gdf)
+    grid_scored["beach_proximity"] = beach_prox.values
+
+    scenario = str(cfg.get("scenario", "convenience_urban"))
+    grid_scored = SCE.apply_scenario(grid_scored, beach_prox, scenario)
+    LOG.info("applied scenario: %s", scenario)
+
+    scenario_compare = SCE.compare_scenarios(grid_scored, beach_prox)
+    scenario_compare.to_csv(out_dir / "scenario_compare.csv", index=False)
+    LOG.info("wrote %s", out_dir / "scenario_compare.csv")
+
+    # --- Routing -------------------------------------------------------
+    from src import routing as RT
+    max_d1 = int(cfg.get("routing", {}).get("max_stops_day1", 8))
+    max_d2 = int(cfg.get("routing", {}).get("max_stops_day2", 8))
+    day1, day2 = RT.build_routes(
+        super_meta if not super_meta.empty else pd.DataFrame(),
+        cluster_meta, grid_scored,
+        max_stops_day1=max_d1, max_stops_day2=max_d2,
+    )
+    day1.to_csv(out_dir / "field_route_day1.csv", index=False)
+    day2.to_csv(out_dir / "field_route_day2.csv", index=False)
+    RT.route_to_kml(day1, out_dir / "field_route_day1.kml", "Rota de campo — Dia 1")
+    RT.route_to_kml(day2, out_dir / "field_route_day2.kml", "Rota de campo — Dia 2")
+    LOG.info("wrote field_route_day1/2.csv + .kml")
 
     # --- Interactive map ----------------------------------------------
     from shapely import wkt as _wkt
@@ -370,6 +530,7 @@ def run(cfg: dict[str, Any]) -> dict[str, Any]:
         top_cells=top_csv,
         study_polygon_wkt=poly.wkt,
         cluster_meta=cluster_meta,
+        super_cluster_meta=super_meta if not super_meta.empty else None,
         bottom_cells=grid_scored.sort_values("score").head(40).copy(),
         poi_layers=layers["poi_layers"],
     )
@@ -381,6 +542,7 @@ def run(cfg: dict[str, Any]) -> dict[str, Any]:
     from src.field_review import build_field_review_map
     fr = build_field_review_map(
         grid_scored, cluster_meta, short, study_polygon_wkt=poly.wkt, cfg=cfg,
+        super_cluster_meta=super_meta if not super_meta.empty else None,
     )
     fr_path = out_dir / "field_review_map.html"
     save_map(fr, fr_path)
