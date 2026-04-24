@@ -117,8 +117,22 @@ def test_build_map_smoke(cfg, tmp_path):
         [(-41.810, -22.420), (-41.790, -22.420), (-41.790, -22.405), (-41.810, -22.405)]
     )
     grid = G.build_h3_grid(poly, resolution=9)
-    grid["score"] = [20 + i for i in range(len(grid))]
+    n = len(grid)
+    grid["score"] = [20 + i for i in range(n)]
     grid["class"] = "médio"
+    grid["bairro"] = "Cavaleiros"
+    grid["cluster_id"] = -1
+    grid["direct_activity_score"] = grid["score"] * 0.7
+    grid["neighborhood_inherited_score"] = grid["score"] * 0.3
+    grid["penalty_total"] = 0.0
+    for col in [
+        "pos_food","pos_shop","pos_supermarket","pos_pharmacy","pos_education",
+        "pos_fitness","pos_healthcare","pos_office","pos_transport","pos_bank",
+        "pos_leisure","pos_residential","pos_commercial","pos_mixed_use",
+        "pos_road_density","pos_anchor_proximity",
+        "pen_unsuitable_landuse","pen_industrial","pen_isolation","pen_low_connectivity",
+    ]:
+        grid[col] = 0.0
     m = build_map(grid, cfg, top_cells=None, study_polygon_wkt=poly.wkt)
     out = tmp_path / "smoke.html"
     m.save(str(out))

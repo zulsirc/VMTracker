@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_4c7f69f2cba71390f0a7c7785cafb2c3 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div style="position:fixed;bottom:18px;left:18px;z-index:9999;
+      background:rgba(255,255,255,.95);padding:10px 14px;
+      border:1px solid #888;border-radius:6px;font:12px sans-serif;max-width:280px">
+      <b>Field Review Map</b><br>
+      Clusters de prospecção numerados.<br>
+      <span style="color:#0a8f3a">●</span> visitar já ·
+      <span style="color:#d29400">●</span> validar ·
+      <span style="color:#999">●</span> baixa prioridade<br>
+      Clique em um marcador para copiar lat/lon ou abrir no Google Maps.
+    </div>
+    
+            <div class="folium-map" id="map_4c7f69f2cba71390f0a7c7785cafb2c3" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_4c7f69f2cba71390f0a7c7785cafb2c3 = L.map(
+                "map_4c7f69f2cba71390f0a7c7785cafb2c3",
+                {
+                    center: [-22.412, -41.793],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+
+            
+
+        
+    
+            var tile_layer_266abd4276a930c6fb4fe5741b38deb6 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_266abd4276a930c6fb4fe5741b38deb6.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_1fe46c7b2eae1674f72b2635ab18ff4a_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#666", "dashArray": "4,4", "fill": false, "weight": 1.5};
+            }
+        }
+
+        function geo_json_1fe46c7b2eae1674f72b2635ab18ff4a_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_1fe46c7b2eae1674f72b2635ab18ff4a = L.geoJson(null, {
+                onEachFeature: geo_json_1fe46c7b2eae1674f72b2635ab18ff4a_onEachFeature,
+            
+                style: geo_json_1fe46c7b2eae1674f72b2635ab18ff4a_styler,
+            ...{
+}
+        });
+
+        function geo_json_1fe46c7b2eae1674f72b2635ab18ff4a_add (data) {
+            geo_json_1fe46c7b2eae1674f72b2635ab18ff4a
+                .addData(data);
+        }
+            geo_json_1fe46c7b2eae1674f72b2635ab18ff4a_add({"bbox": [-41.83, -22.468, -41.78, -22.386], "features": [{"bbox": [-41.83, -22.468, -41.78, -22.386], "geometry": {"coordinates": [[[-41.83, -22.468], [-41.79, -22.465], [-41.783, -22.455], [-41.78, -22.442], [-41.783, -22.425], [-41.785, -22.41], [-41.785, -22.395], [-41.783, -22.387], [-41.8, -22.386], [-41.815, -22.395], [-41.83, -22.41], [-41.83, -22.468]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_1fe46c7b2eae1674f72b2635ab18ff4a.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_8f1db75857bc824843df438b072dc38f_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#0a4dff", "fillColor": "#69a4ff", "fillOpacity": 0.18, "weight": 2};
+            }
+        }
+
+        function geo_json_8f1db75857bc824843df438b072dc38f_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_8f1db75857bc824843df438b072dc38f = L.geoJson(null, {
+                onEachFeature: geo_json_8f1db75857bc824843df438b072dc38f_onEachFeature,
+            
+                style: geo_json_8f1db75857bc824843df438b072dc38f_styler,
+            ...{
+}
+        });
+
+        function geo_json_8f1db75857bc824843df438b072dc38f_add (data) {
+            geo_json_8f1db75857bc824843df438b072dc38f
+                .addData(data);
+        }
+            geo_json_8f1db75857bc824843df438b072dc38f_add({"bbox": [-41.80360706255682, -22.40846936334772, -41.79033389147831, -22.397373882320867], "features": [{"bbox": [-41.80360706255682, -22.40846936334772, -41.79033389147831, -22.397373882320867], "geometry": {"coordinates": [[[-41.791525233178135, -22.40846936334772], [-41.79357244972327, -22.40843759923315], [-41.79456250106806, -22.40686172549008], [-41.796609713143006, -22.406829922327056], [-41.79759975489724, -22.40525400113727], [-41.79964696249051, -22.40522215893055], [-41.80063699464869, -22.403646190301398], [-41.7995798241283, -22.40210205617604], [-41.80056985160403, -22.400526032410042], [-41.80261704468241, -22.4004941504742], [-41.80360706255682, -22.398918079281582], [-41.802549892273106, -22.397373882320867], [-41.800502709216374, -22.397405764946992], [-41.799512686423064, -22.398981843843515], [-41.79746549887377, -22.399013687439844], [-41.79640834414098, -22.39746945283456], [-41.794361162132766, -22.397501258095836], [-41.79337112483652, -22.39907729726284], [-41.791323938359, -22.399109063489366], [-41.79033389147831, -22.400685055218464], [-41.79139103597544, -22.402229273024005], [-41.79040098441175, -22.403805209612727], [-41.79145813424848, -22.40534937298104], [-41.79046807800173, -22.40692525442305], [-41.791525233178135, -22.40846936334772]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_8f1db75857bc824843df438b072dc38f.bindTooltip(
+                `<div>
+                     Cluster #1 · Glória
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_8f1db75857bc824843df438b072dc38f.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_f2bf755ae17a59d64f2c372e7c8ea796_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#0a4dff", "fillColor": "#69a4ff", "fillOpacity": 0.18, "weight": 2};
+            }
+        }
+
+        function geo_json_f2bf755ae17a59d64f2c372e7c8ea796_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_f2bf755ae17a59d64f2c372e7c8ea796 = L.geoJson(null, {
+                onEachFeature: geo_json_f2bf755ae17a59d64f2c372e7c8ea796_onEachFeature,
+            
+                style: geo_json_f2bf755ae17a59d64f2c372e7c8ea796_styler,
+            ...{
+}
+        });
+
+        function geo_json_f2bf755ae17a59d64f2c372e7c8ea796_add (data) {
+            geo_json_f2bf755ae17a59d64f2c372e7c8ea796
+                .addData(data);
+        }
+            geo_json_f2bf755ae17a59d64f2c372e7c8ea796_add({"bbox": [-41.80988300554941, -22.408278391673193, -41.7995798241283, -22.395765834351927], "features": [{"bbox": [-41.80988300554941, -22.408278391673193, -41.7995798241283, -22.395765834351927], "geometry": {"coordinates": [[[-41.80684577872664, -22.40667051954958], [-41.80889299284854, -22.406638561602108], [-41.80988300554941, -22.405062560959312], [-41.80882580906053, -22.403518510553297], [-41.80981581707952, -22.401942454777192], [-41.80875862592991, -22.40039834991965], [-41.80671143185057, -22.400430309228923], [-41.80565425113086, -22.398886158316106], [-41.806644259398475, -22.397310039704234], [-41.805587084018, -22.395765834351927], [-41.80353990546533, -22.395797756003105], [-41.802549892273106, -22.397373882320867], [-41.80360706255682, -22.398918079281582], [-41.80261704468241, -22.4004941504742], [-41.80056985160403, -22.400526032410042], [-41.7995798241283, -22.40210205617604], [-41.80063699464869, -22.403646190301398], [-41.79964696249051, -22.40522215893055], [-41.800704138350376, -22.40676623860832], [-41.80275135147233, -22.406734358052752], [-41.80380853777421, -22.408278391673193], [-41.805855756412846, -22.408246472764294], [-41.80684577872664, -22.40667051954958]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_f2bf755ae17a59d64f2c372e7c8ea796.bindTooltip(
+                `<div>
+                     Cluster #2 · Nova Holanda
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_f2bf755ae17a59d64f2c372e7c8ea796.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_a84d3d8910774b0c0c354b35515f580f_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#0a4dff", "fillColor": "#69a4ff", "fillOpacity": 0.18, "weight": 2};
+            }
+        }
+
+        function geo_json_a84d3d8910774b0c0c354b35515f580f_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_a84d3d8910774b0c0c354b35515f580f = L.geoJson(null, {
+                onEachFeature: geo_json_a84d3d8910774b0c0c354b35515f580f_onEachFeature,
+            
+                style: geo_json_a84d3d8910774b0c0c354b35515f580f_styler,
+            ...{
+}
+        });
+
+        function geo_json_a84d3d8910774b0c0c354b35515f580f_add (data) {
+            geo_json_a84d3d8910774b0c0c354b35515f580f
+                .addData(data);
+        }
+            geo_json_a84d3d8910774b0c0c354b35515f580f_add({"bbox": [-41.80657708760365, -22.399013687439844, -41.79323691152874, -22.38649989898833], "features": [{"bbox": [-41.80657708760365, -22.399013687439844, -41.79323691152874, -22.38649989898833], "geometry": {"coordinates": [[[-41.79746549887377, -22.399013687439844], [-41.799512686423064, -22.398981843843515], [-41.800502709216374, -22.397405764946992], [-41.802549892273106, -22.397373882320867], [-41.80353990546533, -22.395797756003105], [-41.805587084018, -22.395765834351927], [-41.80657708760365, -22.394189660620327], [-41.805519917562386, -22.392645400834922], [-41.80650991646609, -22.39106917198991], [-41.80545275176397, -22.389524857777864], [-41.80340559325373, -22.389556780800802], [-41.8023484389877, -22.38801242055763], [-41.80030128599537, -22.388044305255246], [-41.799244142171545, -22.38649989898833], [-41.79719699470912, -22.386531745365097], [-41.79620698105027, -22.38810799731346], [-41.79726411976501, -22.389652395186882], [-41.79627410142371, -22.391228592024635], [-41.79422693945952, -22.391260398685265], [-41.79323691152874, -22.39283654810327], [-41.79429405046779, -22.394380883163496], [-41.79330401785429, -22.395956977459157], [-41.794361162132766, -22.397501258095836], [-41.79640834414098, -22.39746945283456], [-41.79746549887377, -22.399013687439844]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_a84d3d8910774b0c0c354b35515f580f.bindTooltip(
+                `<div>
+                     Cluster #3 · Morro de São Jorge
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_a84d3d8910774b0c0c354b35515f580f.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_2627feb411508bae820bc3cda79f99b8_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#0a4dff", "fillColor": "#69a4ff", "fillOpacity": 0.18, "weight": 2};
+            }
+        }
+
+        function geo_json_2627feb411508bae820bc3cda79f99b8_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_2627feb411508bae820bc3cda79f99b8 = L.geoJson(null, {
+                onEachFeature: geo_json_2627feb411508bae820bc3cda79f99b8_onEachFeature,
+            
+                style: geo_json_2627feb411508bae820bc3cda79f99b8_styler,
+            ...{
+}
+        });
+
+        function geo_json_2627feb411508bae820bc3cda79f99b8_add (data) {
+            geo_json_2627feb411508bae820bc3cda79f99b8
+                .addData(data);
+        }
+            geo_json_2627feb411508bae820bc3cda79f99b8_add({"bbox": [-41.794361162132766, -22.400716782405482, -41.78399113514751, -22.389811236883546], "features": [{"bbox": [-41.794361162132766, -22.400716782405482, -41.78399113514751, -22.389811236883546], "geometry": {"coordinates": [[[-41.791323938359, -22.399109063489366], [-41.79337112483652, -22.39907729726284], [-41.794361162132766, -22.397501258095836], [-41.79330401785429, -22.395956977459157], [-41.79429405046779, -22.394380883163496], [-41.79323691152874, -22.39283654810327], [-41.79118974509585, -22.392868315738276], [-41.79013261661726, -22.39132393465964], [-41.78808545574963, -22.391355663973226], [-41.787028337737596, -22.389811236883546], [-41.78498118244721, -22.389842927880203], [-41.78399113514751, -22.391419045252857], [-41.78504824802639, -22.392963463939477], [-41.78405819604342, -22.39453952618627], [-41.785115314261866, -22.396083890459725], [-41.78412525759557, -22.39765989757432], [-41.785182381153646, -22.399204207428177], [-41.78722956651233, -22.3991725185721], [-41.788286700543, -22.400716782405482], [-41.79033389147831, -22.400685055218464], [-41.791323938359, -22.399109063489366]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_2627feb411508bae820bc3cda79f99b8.bindTooltip(
+                `<div>
+                     Cluster #4 · Glória
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_2627feb411508bae820bc3cda79f99b8.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_2dec2f13f94068deff2a9aa0ef299dab_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#0a4dff", "fillColor": "#69a4ff", "fillOpacity": 0.18, "weight": 2};
+            }
+        }
+
+        function geo_json_2dec2f13f94068deff2a9aa0ef299dab_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_2dec2f13f94068deff2a9aa0ef299dab = L.geoJson(null, {
+                onEachFeature: geo_json_2dec2f13f94068deff2a9aa0ef299dab_onEachFeature,
+            
+                style: geo_json_2dec2f13f94068deff2a9aa0ef299dab_styler,
+            ...{
+}
+        });
+
+        function geo_json_2dec2f13f94068deff2a9aa0ef299dab_add (data) {
+            geo_json_2dec2f13f94068deff2a9aa0ef299dab
+                .addData(data);
+        }
+            geo_json_2dec2f13f94068deff2a9aa0ef299dab_add({"bbox": [-41.80394285787163, -22.41612572589508, -41.790535172248276, -22.40522215893055], "features": [{"bbox": [-41.80394285787163, -22.41612572589508, -41.790535172248276, -22.40522215893055], "geometry": {"coordinates": [[[-41.80394285787163, -22.414518051937023], [-41.80288566089072, -22.412974127242197], [-41.80387569749433, -22.41139827661333], [-41.80281850585296, -22.409854297452483], [-41.80380853777421, -22.408278391673193], [-41.80275135147233, -22.406734358052752], [-41.800704138350376, -22.40676623860832], [-41.79964696249051, -22.40522215893055], [-41.79759975489724, -22.40525400113727], [-41.796609713143006, -22.406829922327056], [-41.79456250106806, -22.40686172549008], [-41.79357244972327, -22.40843759923315], [-41.791525233178135, -22.40846936334772], [-41.790535172248276, -22.41004518963672], [-41.791592332764395, -22.41158924411131], [-41.79363955933227, -22.411557480700527], [-41.794696730308644, -22.41310148912312], [-41.79674396242856, -22.413069687358433], [-41.79780114385908, -22.41461364972166], [-41.79984838151905, -22.41458180959859], [-41.80090557339761, -22.41612572589508], [-41.80295281658562, -22.416093847409165], [-41.80394285787163, -22.414518051937023]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_2dec2f13f94068deff2a9aa0ef299dab.bindTooltip(
+                `<div>
+                     Cluster #5 · Cavaleiros
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_2dec2f13f94068deff2a9aa0ef299dab.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_f3a4af22c8948c41517c5a2cd7a77159_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#0a4dff", "fillColor": "#69a4ff", "fillOpacity": 0.18, "weight": 2};
+            }
+        }
+
+        function geo_json_f3a4af22c8948c41517c5a2cd7a77159_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_f3a4af22c8948c41517c5a2cd7a77159 = L.geoJson(null, {
+                onEachFeature: geo_json_f3a4af22c8948c41517c5a2cd7a77159_onEachFeature,
+            
+                style: geo_json_f3a4af22c8948c41517c5a2cd7a77159_styler,
+            ...{
+}
+        });
+
+        function geo_json_f3a4af22c8948c41517c5a2cd7a77159_add (data) {
+            geo_json_f3a4af22c8948c41517c5a2cd7a77159
+                .addData(data);
+        }
+            geo_json_f3a4af22c8948c41517c5a2cd7a77159_add({"bbox": [-41.81899460107006, -22.401942454777192, -41.805519917562386, -22.39103721063717], "features": [{"bbox": [-41.81899460107006, -22.401942454777192, -41.805519917562386, -22.39103721063717], "geometry": {"coordinates": [[[-41.814900210086215, -22.40030231724618], [-41.81595741673809, -22.401846384427355], [-41.818004617240895, -22.401814309392773], [-41.81899460107006, -22.4002381665099], [-41.81793738934567, -22.39869409094504], [-41.81892736849361, -22.397117892945047], [-41.81787016210826, -22.395573762931154], [-41.815822981646235, -22.395605839300153], [-41.81476578567252, -22.394061663225663], [-41.81271861068045, -22.39409370125144], [-41.81166142512449, -22.392549479123726], [-41.80961425561437, -22.392581478810744], [-41.808557080482274, -22.39103721063717], [-41.80650991646609, -22.39106917198991], [-41.805519917562386, -22.392645400834922], [-41.80657708760365, -22.394189660620327], [-41.805587084018, -22.395765834351927], [-41.806644259398475, -22.397310039704234], [-41.80565425113086, -22.398886158316106], [-41.80671143185057, -22.400430309228923], [-41.80875862592991, -22.40039834991965], [-41.80981581707952, -22.401942454777192], [-41.811863016652175, -22.401910457119637], [-41.81285301505295, -22.4003343539282], [-41.814900210086215, -22.40030231724618]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_f3a4af22c8948c41517c5a2cd7a77159.bindTooltip(
+                `<div>
+                     Cluster #6 · Nova Holanda
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_f3a4af22c8948c41517c5a2cd7a77159.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_6dc85ad2851562b683f727e105e36186_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#0a4dff", "fillColor": "#69a4ff", "fillOpacity": 0.18, "weight": 2};
+            }
+        }
+
+        function geo_json_6dc85ad2851562b683f727e105e36186_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_6dc85ad2851562b683f727e105e36186 = L.geoJson(null, {
+                onEachFeature: geo_json_6dc85ad2851562b683f727e105e36186_onEachFeature,
+            
+                style: geo_json_6dc85ad2851562b683f727e105e36186_styler,
+            ...{
+}
+        });
+
+        function geo_json_6dc85ad2851562b683f727e105e36186_add (data) {
+            geo_json_6dc85ad2851562b683f727e105e36186
+                .addData(data);
+        }
+            geo_json_6dc85ad2851562b683f727e105e36186_add({"bbox": [-41.81318903749173, -22.41914962491923, -41.80281850585296, -22.406638561602108], "features": [{"bbox": [-41.81318903749173, -22.41914962491923, -41.80281850585296, -22.406638561602108], "geometry": {"coordinates": [[[-41.810151766003465, -22.41754188964782], [-41.812199015682204, -22.417509895370713], [-41.81318903749173, -22.41593406788207], [-41.81213181456109, -22.41439022695417], [-41.8131218316888, -22.412814344312324], [-41.81206461409756, -22.411270448908052], [-41.813054626543455, -22.40969451111934], [-41.811997414291554, -22.4081505612451], [-41.809950194676745, -22.40818255755018], [-41.80889299284854, -22.406638561602108], [-41.80684577872664, -22.40667051954958], [-41.805855756412846, -22.408246472764294], [-41.80380853777421, -22.408278391673193], [-41.80281850585296, -22.409854297452483], [-41.80387569749433, -22.41139827661333], [-41.80288566089072, -22.412974127242197], [-41.80394285787163, -22.414518051937023], [-41.80295281658562, -22.416093847409165], [-41.80401001890612, -22.417637717631536], [-41.80605726761019, -22.417605800778297], [-41.807114480366494, -22.41914962491923], [-41.809161734574644, -22.419117669694185], [-41.810151766003465, -22.41754188964782]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_6dc85ad2851562b683f727e105e36186.bindTooltip(
+                `<div>
+                     Cluster #7 · Bosque Azul
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_6dc85ad2851562b683f727e105e36186.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_0a1e87c4713e00a0816985cc4a51b199_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#0a4dff", "fillColor": "#69a4ff", "fillOpacity": 0.18, "weight": 2};
+            }
+        }
+
+        function geo_json_0a1e87c4713e00a0816985cc4a51b199_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_0a1e87c4713e00a0816985cc4a51b199 = L.geoJson(null, {
+                onEachFeature: geo_json_0a1e87c4713e00a0816985cc4a51b199_onEachFeature,
+            
+                style: geo_json_0a1e87c4713e00a0816985cc4a51b199_styler,
+            ...{
+}
+        });
+
+        function geo_json_0a1e87c4713e00a0816985cc4a51b199_add (data) {
+            geo_json_0a1e87c4713e00a0816985cc4a51b199
+                .addData(data);
+        }
+            geo_json_0a1e87c4713e00a0816985cc4a51b199_add({"bbox": [-41.791525233178135, -22.410076914698088, -41.784192319803985, -22.3991725185721], "features": [{"bbox": [-41.791525233178135, -22.410076914698088, -41.784192319803985, -22.3991725185721], "geometry": {"coordinates": [[[-41.790535172248276, -22.41004518963672], [-41.791525233178135, -22.40846936334772], [-41.79046807800173, -22.40692525442305], [-41.79145813424848, -22.40534937298104], [-41.79040098441175, -22.403805209612727], [-41.79139103597544, -22.402229273024005], [-41.79033389147831, -22.400685055218464], [-41.788286700543, -22.400716782405482], [-41.78722956651233, -22.3991725185721], [-41.785182381153646, -22.399204207428177], [-41.784192319803985, -22.40078015940426], [-41.78524944870173, -22.40232441483208], [-41.784259382668665, -22.403900311663314], [-41.78531651690613, -22.40544451265869], [-41.78432644618962, -22.407020354338766], [-41.785383585766866, -22.40856450089527], [-41.7874308011947, -22.408532814178855], [-41.788487951244434, -22.410076914698088], [-41.790535172248276, -22.41004518963672]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_0a1e87c4713e00a0816985cc4a51b199.bindTooltip(
+                `<div>
+                     Cluster #8 · Glória
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_0a1e87c4713e00a0816985cc4a51b199.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#0a4dff", "fillColor": "#69a4ff", "fillOpacity": 0.18, "weight": 2};
+            }
+        }
+
+        function geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e = L.geoJson(null, {
+                onEachFeature: geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e_onEachFeature,
+            
+                style: geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e_styler,
+            ...{
+}
+        });
+
+        function geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e_add (data) {
+            geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e
+                .addData(data);
+        }
+            geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e_add({"bbox": [-41.79726411976501, -22.392868315738276, -41.78392407490785, -22.384987293081817], "features": [{"bbox": [-41.79726411976501, -22.392868315738276, -41.78392407490785, -22.384987293081817], "geometry": {"coordinates": [[[-41.79323691152874, -22.39283654810327], [-41.79422693945952, -22.391260398685265], [-41.79627410142371, -22.391228592024635], [-41.79726411976501, -22.389652395186882], [-41.79620698105027, -22.38810799731346], [-41.79719699470912, -22.386531745365097], [-41.796139861333614, -22.384987293081817], [-41.79409271941309, -22.385019101142213], [-41.79310270084761, -22.386595360785908], [-41.791055554458985, -22.386627129829805], [-41.78999843665914, -22.385082639934577], [-41.78795129583619, -22.3851143706664], [-41.7869612627921, -22.38669059058424], [-41.78491411752431, -22.386722282294635], [-41.78392407490785, -22.38829845478684], [-41.78498118244721, -22.389842927880203], [-41.787028337737596, -22.389811236883546], [-41.78808545574963, -22.391355663973226], [-41.79013261661726, -22.39132393465964], [-41.79118974509585, -22.392868315738276], [-41.79323691152874, -22.39283654810327]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e.bindTooltip(
+                `<div>
+                     Cluster #9 · Aroeira
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+        function geo_json_052cd593d5984b0707fa81f68169448f_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#0a4dff", "fillColor": "#69a4ff", "fillOpacity": 0.18, "weight": 2};
+            }
+        }
+
+        function geo_json_052cd593d5984b0707fa81f68169448f_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_052cd593d5984b0707fa81f68169448f = L.geoJson(null, {
+                onEachFeature: geo_json_052cd593d5984b0707fa81f68169448f_onEachFeature,
+            
+                style: geo_json_052cd593d5984b0707fa81f68169448f_styler,
+            ...{
+}
+        });
+
+        function geo_json_052cd593d5984b0707fa81f68169448f_add (data) {
+            geo_json_052cd593d5984b0707fa81f68169448f
+                .addData(data);
+        }
+            geo_json_052cd593d5984b0707fa81f68169448f_add({"bbox": [-41.819061834304335, -22.40818255755018, -41.80882580906053, -22.40030231724618], "features": [{"bbox": [-41.819061834304335, -22.40818255755018, -41.80882580906053, -22.40030231724618], "geometry": {"coordinates": [[[-41.80889299284854, -22.406638561602108], [-41.809950194676745, -22.40818255755018], [-41.811997414291554, -22.4081505612451], [-41.81298742205571, -22.40657456831582], [-41.81503463713054, -22.40654253297714], [-41.81602463527057, -22.404966492629114], [-41.818071845793895, -22.404934418261586], [-41.819061834304335, -22.403358330502158], [-41.818004617240895, -22.401814309392773], [-41.81595741673809, -22.401846384427355], [-41.814900210086215, -22.40030231724618], [-41.81285301505295, -22.4003343539282], [-41.811863016652175, -22.401910457119637], [-41.80981581707952, -22.401942454777192], [-41.80882580906053, -22.403518510553297], [-41.80988300554941, -22.405062560959312], [-41.80889299284854, -22.406638561602108]]], "type": "Polygon"}, "id": "0", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_052cd593d5984b0707fa81f68169448f.bindTooltip(
+                `<div>
+                     Cluster #10 · Bosque Azul
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_052cd593d5984b0707fa81f68169448f.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+            var feature_group_bd229b6716e14e91c816ca019ca2ee6a = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_6dc034fccb5bf45d4f6ae94a1755055a = L.marker(
+                [-22.402334, -41.79583],
+                {
+}
+            ).addTo(feature_group_bd229b6716e14e91c816ca019ca2ee6a);
+        
+    
+            var div_icon_97f66337d43c50f38cc11acc2761ca63 = L.divIcon({
+  "html": "\u003cdiv style=\u0027background:#0a8f3a;color:white;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.5)\u0027\u003e1\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+        var popup_19664a18332c475377491e5c825bde98 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_1eafc83f51be0f625113b7d6c5a47bfe = $(`<div id="html_1eafc83f51be0f625113b7d6c5a47bfe" style="width: 100.0%; height: 100.0%;">         <div style="font:12px sans-serif;min-width:240px">           <div style="font-size:14px"><b>#1 — Glória</b></div>           Cluster #1 · prioridade <b>alta</b><br>           score médio <b>98.7</b> · máx <b>100.0</b><br>           <i>proximidade a âncoras + alimentação + diversidade de usos</i><br>           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">             <code>-22.402334, -41.795830</code>             <button onclick="navigator.clipboard.writeText('-22.402334,-41.795830');               this.innerText='copiado!'"               style="margin-left:6px;background:#0a4dff;color:#fff;border:none;               padding:2px 6px;border-radius:3px;cursor:pointer">copiar</button>           </div>           <a href="https://www.google.com/maps/?q=-22.402334,-41.79583" target="_blank">             abrir no Google Maps</a>           <br><br>           <i>Espera-se ver fluxo contínuo de pedestres, presença de comércio/serviços ativo nas calçadas e mistura de usos. Procurar hosts: padaria, farmácia, mercado, academia, lan-house, salão, lavanderia, lojas de conveniência.</i>         </div></div>`)[0];
+                popup_19664a18332c475377491e5c825bde98.setContent(html_1eafc83f51be0f625113b7d6c5a47bfe);
+            
+        
+
+        marker_6dc034fccb5bf45d4f6ae94a1755055a.bindPopup(popup_19664a18332c475377491e5c825bde98)
+        ;
+
+        
+    
+    
+            marker_6dc034fccb5bf45d4f6ae94a1755055a.bindTooltip(
+                `<div>
+                     #1 Glória (alta)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6dc034fccb5bf45d4f6ae94a1755055a.setIcon(div_icon_97f66337d43c50f38cc11acc2761ca63);
+            
+    
+            var marker_9c40ca72bc5a6c47c5b2f0592bb1956a = L.marker(
+                [-22.402802, -41.804715],
+                {
+}
+            ).addTo(feature_group_bd229b6716e14e91c816ca019ca2ee6a);
+        
+    
+            var div_icon_9610e0ea435e98c653b7610126bae7ed = L.divIcon({
+  "html": "\u003cdiv style=\u0027background:#0a8f3a;color:white;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.5)\u0027\u003e2\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+        var popup_72d25810bb8b5b1b8e122c1d50f59b6f = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_3a5eb1bbf50c1a466b41ad2a04e333d2 = $(`<div id="html_3a5eb1bbf50c1a466b41ad2a04e333d2" style="width: 100.0%; height: 100.0%;">         <div style="font:12px sans-serif;min-width:240px">           <div style="font-size:14px"><b>#2 — Nova Holanda</b></div>           Cluster #2 · prioridade <b>alta</b><br>           score médio <b>94.87</b> · máx <b>99.5</b><br>           <i>proximidade a âncoras + diversidade de usos + alimentação</i><br>           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">             <code>-22.402802, -41.804715</code>             <button onclick="navigator.clipboard.writeText('-22.402802,-41.804715');               this.innerText='copiado!'"               style="margin-left:6px;background:#0a4dff;color:#fff;border:none;               padding:2px 6px;border-radius:3px;cursor:pointer">copiar</button>           </div>           <a href="https://www.google.com/maps/?q=-22.402802,-41.804715" target="_blank">             abrir no Google Maps</a>           <br><br>           <i>Espera-se ver fluxo contínuo de pedestres, presença de comércio/serviços ativo nas calçadas e mistura de usos. Procurar hosts: padaria, farmácia, mercado, academia, lan-house, salão, lavanderia, lojas de conveniência.</i>         </div></div>`)[0];
+                popup_72d25810bb8b5b1b8e122c1d50f59b6f.setContent(html_3a5eb1bbf50c1a466b41ad2a04e333d2);
+            
+        
+
+        marker_9c40ca72bc5a6c47c5b2f0592bb1956a.bindPopup(popup_72d25810bb8b5b1b8e122c1d50f59b6f)
+        ;
+
+        
+    
+    
+            marker_9c40ca72bc5a6c47c5b2f0592bb1956a.bindTooltip(
+                `<div>
+                     #2 Nova Holanda (alta)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_9c40ca72bc5a6c47c5b2f0592bb1956a.setIcon(div_icon_9610e0ea435e98c653b7610126bae7ed);
+            
+    
+            var marker_9f33fd649e8650728e75c56e0b9775ed = L.marker(
+                [-22.393019, -41.799757],
+                {
+}
+            ).addTo(feature_group_bd229b6716e14e91c816ca019ca2ee6a);
+        
+    
+            var div_icon_02ec335660ab636b593b14212dc235e4 = L.divIcon({
+  "html": "\u003cdiv style=\u0027background:#0a8f3a;color:white;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.5)\u0027\u003e3\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+        var popup_96f649c3d44a243aeb82846d473501b6 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_8433b8d741c17417f016fb4ae2510ab3 = $(`<div id="html_8433b8d741c17417f016fb4ae2510ab3" style="width: 100.0%; height: 100.0%;">         <div style="font:12px sans-serif;min-width:240px">           <div style="font-size:14px"><b>#3 — Morro de São Jorge</b></div>           Cluster #3 · prioridade <b>alta</b><br>           score médio <b>82.76</b> · máx <b>99.58</b><br>           <i>diversidade de usos + proximidade a âncoras + densidade residencial</i><br>           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">             <code>-22.393019, -41.799757</code>             <button onclick="navigator.clipboard.writeText('-22.393019,-41.799757');               this.innerText='copiado!'"               style="margin-left:6px;background:#0a4dff;color:#fff;border:none;               padding:2px 6px;border-radius:3px;cursor:pointer">copiar</button>           </div>           <a href="https://www.google.com/maps/?q=-22.393019,-41.799757" target="_blank">             abrir no Google Maps</a>           <br><br>           <i>Espera-se ver fluxo contínuo de pedestres, presença de comércio/serviços ativo nas calçadas e mistura de usos. Procurar hosts: padaria, farmácia, mercado, academia, lan-house, salão, lavanderia, lojas de conveniência.</i>         </div></div>`)[0];
+                popup_96f649c3d44a243aeb82846d473501b6.setContent(html_8433b8d741c17417f016fb4ae2510ab3);
+            
+        
+
+        marker_9f33fd649e8650728e75c56e0b9775ed.bindPopup(popup_96f649c3d44a243aeb82846d473501b6)
+        ;
+
+        
+    
+    
+            marker_9f33fd649e8650728e75c56e0b9775ed.bindTooltip(
+                `<div>
+                     #3 Morro de São Jorge (alta)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_9f33fd649e8650728e75c56e0b9775ed.setIcon(div_icon_02ec335660ab636b593b14212dc235e4);
+            
+    
+            var marker_f31740cdfbc728653bd5271cec19a033 = L.marker(
+                [-22.395441, -41.788813],
+                {
+}
+            ).addTo(feature_group_bd229b6716e14e91c816ca019ca2ee6a);
+        
+    
+            var div_icon_ce4b03d026b1ae9c3d2970b01d47eb38 = L.divIcon({
+  "html": "\u003cdiv style=\u0027background:#0a8f3a;color:white;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.5)\u0027\u003e4\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+        var popup_430acfd7e1332fd675d2e9f371d6841f = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_4fafb1136a94f9fbbb1c620a45443861 = $(`<div id="html_4fafb1136a94f9fbbb1c620a45443861" style="width: 100.0%; height: 100.0%;">         <div style="font:12px sans-serif;min-width:240px">           <div style="font-size:14px"><b>#4 — Glória</b></div>           Cluster #4 · prioridade <b>alta</b><br>           score médio <b>90.99</b> · máx <b>99.33</b><br>           <i>proximidade a âncoras + diversidade de usos + comércio</i><br>           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">             <code>-22.395441, -41.788813</code>             <button onclick="navigator.clipboard.writeText('-22.395441,-41.788813');               this.innerText='copiado!'"               style="margin-left:6px;background:#0a4dff;color:#fff;border:none;               padding:2px 6px;border-radius:3px;cursor:pointer">copiar</button>           </div>           <a href="https://www.google.com/maps/?q=-22.395441,-41.788813" target="_blank">             abrir no Google Maps</a>           <br><br>           <i>Espera-se ver fluxo contínuo de pedestres, presença de comércio/serviços ativo nas calçadas e mistura de usos. Procurar hosts: padaria, farmácia, mercado, academia, lan-house, salão, lavanderia, lojas de conveniência.</i>         </div></div>`)[0];
+                popup_430acfd7e1332fd675d2e9f371d6841f.setContent(html_4fafb1136a94f9fbbb1c620a45443861);
+            
+        
+
+        marker_f31740cdfbc728653bd5271cec19a033.bindPopup(popup_430acfd7e1332fd675d2e9f371d6841f)
+        ;
+
+        
+    
+    
+            marker_f31740cdfbc728653bd5271cec19a033.bindTooltip(
+                `<div>
+                     #4 Glória (alta)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f31740cdfbc728653bd5271cec19a033.setIcon(div_icon_ce4b03d026b1ae9c3d2970b01d47eb38);
+            
+    
+            var marker_95666856d8210244da1402621ceee043 = L.marker(
+                [-22.410443, -41.798394],
+                {
+}
+            ).addTo(feature_group_bd229b6716e14e91c816ca019ca2ee6a);
+        
+    
+            var div_icon_a3a1113be240e09bae5a7b4e95b55451 = L.divIcon({
+  "html": "\u003cdiv style=\u0027background:#0a8f3a;color:white;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.5)\u0027\u003e5\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+        var popup_5d81e7512541020a50ffba53f942412e = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_ae736bf4bfe1ac674079e606ae40fa91 = $(`<div id="html_ae736bf4bfe1ac674079e606ae40fa91" style="width: 100.0%; height: 100.0%;">         <div style="font:12px sans-serif;min-width:240px">           <div style="font-size:14px"><b>#5 — Cavaleiros</b></div>           Cluster #5 · prioridade <b>alta</b><br>           score médio <b>81.76</b> · máx <b>98.08</b><br>           <i>diversidade de usos + alimentação + proximidade a âncoras</i><br>           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">             <code>-22.410443, -41.798394</code>             <button onclick="navigator.clipboard.writeText('-22.410443,-41.798394');               this.innerText='copiado!'"               style="margin-left:6px;background:#0a4dff;color:#fff;border:none;               padding:2px 6px;border-radius:3px;cursor:pointer">copiar</button>           </div>           <a href="https://www.google.com/maps/?q=-22.410443,-41.798394" target="_blank">             abrir no Google Maps</a>           <br><br>           <i>Espera-se ver fluxo contínuo de pedestres, presença de comércio/serviços ativo nas calçadas e mistura de usos. Procurar hosts: padaria, farmácia, mercado, academia, lan-house, salão, lavanderia, lojas de conveniência.</i>         </div></div>`)[0];
+                popup_5d81e7512541020a50ffba53f942412e.setContent(html_ae736bf4bfe1ac674079e606ae40fa91);
+            
+        
+
+        marker_95666856d8210244da1402621ceee043.bindPopup(popup_5d81e7512541020a50ffba53f942412e)
+        ;
+
+        
+    
+    
+            marker_95666856d8210244da1402621ceee043.bindTooltip(
+                `<div>
+                     #5 Cavaleiros (alta)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_95666856d8210244da1402621ceee043.setIcon(div_icon_a3a1113be240e09bae5a7b4e95b55451);
+            
+    
+            var marker_4fbdf03692ca28ea0243abbc863bb5b5 = L.marker(
+                [-22.397076, -41.811657],
+                {
+}
+            ).addTo(feature_group_bd229b6716e14e91c816ca019ca2ee6a);
+        
+    
+            var div_icon_9ff337f7e7fb4fcc918b6c0d71ed95be = L.divIcon({
+  "html": "\u003cdiv style=\u0027background:#0a8f3a;color:white;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.5)\u0027\u003e6\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+        var popup_271b6a1cd1af1cd3170d39fa2e51c089 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_4167f0b4245417f714bcfa66fd2e68ca = $(`<div id="html_4167f0b4245417f714bcfa66fd2e68ca" style="width: 100.0%; height: 100.0%;">         <div style="font:12px sans-serif;min-width:240px">           <div style="font-size:14px"><b>#6 — Nova Holanda</b></div>           Cluster #6 · prioridade <b>alta</b><br>           score médio <b>78.24</b> · máx <b>88.71</b><br>           <i>proximidade a âncoras + diversidade de usos + escritórios</i><br>           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">             <code>-22.397076, -41.811657</code>             <button onclick="navigator.clipboard.writeText('-22.397076,-41.811657');               this.innerText='copiado!'"               style="margin-left:6px;background:#0a4dff;color:#fff;border:none;               padding:2px 6px;border-radius:3px;cursor:pointer">copiar</button>           </div>           <a href="https://www.google.com/maps/?q=-22.397076,-41.811657" target="_blank">             abrir no Google Maps</a>           <br><br>           <i>Espera-se ver fluxo contínuo de pedestres, presença de comércio/serviços ativo nas calçadas e mistura de usos. Procurar hosts: padaria, farmácia, mercado, academia, lan-house, salão, lavanderia, lojas de conveniência.</i>         </div></div>`)[0];
+                popup_271b6a1cd1af1cd3170d39fa2e51c089.setContent(html_4167f0b4245417f714bcfa66fd2e68ca);
+            
+        
+
+        marker_4fbdf03692ca28ea0243abbc863bb5b5.bindPopup(popup_271b6a1cd1af1cd3170d39fa2e51c089)
+        ;
+
+        
+    
+    
+            marker_4fbdf03692ca28ea0243abbc863bb5b5.bindTooltip(
+                `<div>
+                     #6 Nova Holanda (alta)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_4fbdf03692ca28ea0243abbc863bb5b5.setIcon(div_icon_9ff337f7e7fb4fcc918b6c0d71ed95be);
+            
+    
+            var marker_e120081c1f8b71985d7fd33b6922455e = L.marker(
+                [-22.404625, -41.787859],
+                {
+}
+            ).addTo(feature_group_bd229b6716e14e91c816ca019ca2ee6a);
+        
+    
+            var div_icon_cd9a1b362b1804a446fe04aa1b217086 = L.divIcon({
+  "html": "\u003cdiv style=\u0027background:#0a8f3a;color:white;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.5)\u0027\u003e8\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+        var popup_64ed21bf9cb7eef4a01d88ac0ca6a82d = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_1b923c501546f99899c5ed2527e360fe = $(`<div id="html_1b923c501546f99899c5ed2527e360fe" style="width: 100.0%; height: 100.0%;">         <div style="font:12px sans-serif;min-width:240px">           <div style="font-size:14px"><b>#8 — Glória</b></div>           Cluster #8 · prioridade <b>alta</b><br>           score médio <b>81.7</b> · máx <b>94.75</b><br>           <i>diversidade de usos + alimentação + proximidade a âncoras</i><br>           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">             <code>-22.404625, -41.787859</code>             <button onclick="navigator.clipboard.writeText('-22.404625,-41.787859');               this.innerText='copiado!'"               style="margin-left:6px;background:#0a4dff;color:#fff;border:none;               padding:2px 6px;border-radius:3px;cursor:pointer">copiar</button>           </div>           <a href="https://www.google.com/maps/?q=-22.404625,-41.787859" target="_blank">             abrir no Google Maps</a>           <br><br>           <i>Espera-se ver fluxo contínuo de pedestres, presença de comércio/serviços ativo nas calçadas e mistura de usos. Procurar hosts: padaria, farmácia, mercado, academia, lan-house, salão, lavanderia, lojas de conveniência.</i>         </div></div>`)[0];
+                popup_64ed21bf9cb7eef4a01d88ac0ca6a82d.setContent(html_1b923c501546f99899c5ed2527e360fe);
+            
+        
+
+        marker_e120081c1f8b71985d7fd33b6922455e.bindPopup(popup_64ed21bf9cb7eef4a01d88ac0ca6a82d)
+        ;
+
+        
+    
+    
+            marker_e120081c1f8b71985d7fd33b6922455e.bindTooltip(
+                `<div>
+                     #8 Glória (alta)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e120081c1f8b71985d7fd33b6922455e.setIcon(div_icon_cd9a1b362b1804a446fe04aa1b217086);
+            
+    
+            var marker_b6dc8fda70d759e19ae1ff3d91823e76 = L.marker(
+                [-22.404072, -41.813343],
+                {
+}
+            ).addTo(feature_group_bd229b6716e14e91c816ca019ca2ee6a);
+        
+    
+            var div_icon_6f8a178ab5105184185db336d65ecec8 = L.divIcon({
+  "html": "\u003cdiv style=\u0027background:#0a8f3a;color:white;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.5)\u0027\u003e10\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+        var popup_ee0d81d0071b839fb93659e02fb68acf = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_4921e17d8bb2e0687dfaef7ab4cd0458 = $(`<div id="html_4921e17d8bb2e0687dfaef7ab4cd0458" style="width: 100.0%; height: 100.0%;">         <div style="font:12px sans-serif;min-width:240px">           <div style="font-size:14px"><b>#10 — Bosque Azul</b></div>           Cluster #10 · prioridade <b>alta</b><br>           score médio <b>78.66</b> · máx <b>82.07</b><br>           <i>proximidade a âncoras + diversidade de usos + educação</i><br>           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">             <code>-22.404072, -41.813343</code>             <button onclick="navigator.clipboard.writeText('-22.404072,-41.813343');               this.innerText='copiado!'"               style="margin-left:6px;background:#0a4dff;color:#fff;border:none;               padding:2px 6px;border-radius:3px;cursor:pointer">copiar</button>           </div>           <a href="https://www.google.com/maps/?q=-22.404072,-41.813343" target="_blank">             abrir no Google Maps</a>           <br><br>           <i>Espera-se ver fluxo contínuo de pedestres, presença de comércio/serviços ativo nas calçadas e mistura de usos. Procurar hosts: padaria, farmácia, mercado, academia, lan-house, salão, lavanderia, lojas de conveniência.</i>         </div></div>`)[0];
+                popup_ee0d81d0071b839fb93659e02fb68acf.setContent(html_4921e17d8bb2e0687dfaef7ab4cd0458);
+            
+        
+
+        marker_b6dc8fda70d759e19ae1ff3d91823e76.bindPopup(popup_ee0d81d0071b839fb93659e02fb68acf)
+        ;
+
+        
+    
+    
+            marker_b6dc8fda70d759e19ae1ff3d91823e76.bindTooltip(
+                `<div>
+                     #10 Bosque Azul (alta)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_b6dc8fda70d759e19ae1ff3d91823e76.setIcon(div_icon_6f8a178ab5105184185db336d65ecec8);
+            
+    
+            feature_group_bd229b6716e14e91c816ca019ca2ee6a.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+            var feature_group_6005b1a8c60c23fbc0b0ed5c993a0cc0 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_18b36c5dc3d4d9aced53018a4fa4d32b = L.marker(
+                [-22.412894, -41.808004],
+                {
+}
+            ).addTo(feature_group_6005b1a8c60c23fbc0b0ed5c993a0cc0);
+        
+    
+            var div_icon_73d04701f75e049240c5f572cff7e094 = L.divIcon({
+  "html": "\u003cdiv style=\u0027background:#d29400;color:white;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.5)\u0027\u003e7\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+        var popup_9c2a9cc719638f3b23478c954cf6e351 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_ae027eb6e0d678db3ccc04eb6eee36db = $(`<div id="html_ae027eb6e0d678db3ccc04eb6eee36db" style="width: 100.0%; height: 100.0%;">         <div style="font:12px sans-serif;min-width:240px">           <div style="font-size:14px"><b>#7 — Bosque Azul</b></div>           Cluster #7 · prioridade <b>média</b><br>           score médio <b>67.93</b> · máx <b>84.59</b><br>           <i>diversidade de usos + proximidade a âncoras + alimentação</i><br>           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">             <code>-22.412894, -41.808004</code>             <button onclick="navigator.clipboard.writeText('-22.412894,-41.808004');               this.innerText='copiado!'"               style="margin-left:6px;background:#0a4dff;color:#fff;border:none;               padding:2px 6px;border-radius:3px;cursor:pointer">copiar</button>           </div>           <a href="https://www.google.com/maps/?q=-22.412894,-41.808004" target="_blank">             abrir no Google Maps</a>           <br><br>           <i>Espera-se ver fluxo contínuo de pedestres, presença de comércio/serviços ativo nas calçadas e mistura de usos. Procurar hosts: padaria, farmácia, mercado, academia, lan-house, salão, lavanderia, lojas de conveniência.</i>         </div></div>`)[0];
+                popup_9c2a9cc719638f3b23478c954cf6e351.setContent(html_ae027eb6e0d678db3ccc04eb6eee36db);
+            
+        
+
+        marker_18b36c5dc3d4d9aced53018a4fa4d32b.bindPopup(popup_9c2a9cc719638f3b23478c954cf6e351)
+        ;
+
+        
+    
+    
+            marker_18b36c5dc3d4d9aced53018a4fa4d32b.bindTooltip(
+                `<div>
+                     #7 Bosque Azul (média)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_18b36c5dc3d4d9aced53018a4fa4d32b.setIcon(div_icon_73d04701f75e049240c5f572cff7e094);
+            
+    
+            var marker_069beabbdd7dce635b6a1ca100fcf72e = L.marker(
+                [-22.388631, -41.791245],
+                {
+}
+            ).addTo(feature_group_6005b1a8c60c23fbc0b0ed5c993a0cc0);
+        
+    
+            var div_icon_3fc261086b86da690dfc3788c93e3490 = L.divIcon({
+  "html": "\u003cdiv style=\u0027background:#d29400;color:white;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.5)\u0027\u003e9\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+        var popup_74f566652f83c958add1dbc61908a6a2 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_e24f76c540ded9ad42972ef7a18128af = $(`<div id="html_e24f76c540ded9ad42972ef7a18128af" style="width: 100.0%; height: 100.0%;">         <div style="font:12px sans-serif;min-width:240px">           <div style="font-size:14px"><b>#9 — Aroeira</b></div>           Cluster #9 · prioridade <b>média</b><br>           score médio <b>74.67</b> · máx <b>84.95</b><br>           <i>proximidade a âncoras + diversidade de usos + comércio</i><br>           <div style="margin:6px 0;padding:4px;background:#f3f3f3;border-radius:3px">             <code>-22.388631, -41.791245</code>             <button onclick="navigator.clipboard.writeText('-22.388631,-41.791245');               this.innerText='copiado!'"               style="margin-left:6px;background:#0a4dff;color:#fff;border:none;               padding:2px 6px;border-radius:3px;cursor:pointer">copiar</button>           </div>           <a href="https://www.google.com/maps/?q=-22.388631,-41.791245" target="_blank">             abrir no Google Maps</a>           <br><br>           <i>Espera-se ver fluxo contínuo de pedestres, presença de comércio/serviços ativo nas calçadas e mistura de usos. Procurar hosts: padaria, farmácia, mercado, academia, lan-house, salão, lavanderia, lojas de conveniência.</i>         </div></div>`)[0];
+                popup_74f566652f83c958add1dbc61908a6a2.setContent(html_e24f76c540ded9ad42972ef7a18128af);
+            
+        
+
+        marker_069beabbdd7dce635b6a1ca100fcf72e.bindPopup(popup_74f566652f83c958add1dbc61908a6a2)
+        ;
+
+        
+    
+    
+            marker_069beabbdd7dce635b6a1ca100fcf72e.bindTooltip(
+                `<div>
+                     #9 Aroeira (média)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_069beabbdd7dce635b6a1ca100fcf72e.setIcon(div_icon_3fc261086b86da690dfc3788c93e3490);
+            
+    
+            feature_group_6005b1a8c60c23fbc0b0ed5c993a0cc0.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+            var feature_group_a89a6fc5167352504a229b9b4013e1e6 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            feature_group_a89a6fc5167352504a229b9b4013e1e6.addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+        
+    
+            var layer_control_62609c96dc215f0dcc689ec9725ce132_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_266abd4276a930c6fb4fe5741b38deb6,
+                },
+                overlays :  {
+                    "\u00c1rea" : geo_json_1fe46c7b2eae1674f72b2635ab18ff4a,
+                    "macro_element_8f1db75857bc824843df438b072dc38f" : geo_json_8f1db75857bc824843df438b072dc38f,
+                    "macro_element_f2bf755ae17a59d64f2c372e7c8ea796" : geo_json_f2bf755ae17a59d64f2c372e7c8ea796,
+                    "macro_element_a84d3d8910774b0c0c354b35515f580f" : geo_json_a84d3d8910774b0c0c354b35515f580f,
+                    "macro_element_2627feb411508bae820bc3cda79f99b8" : geo_json_2627feb411508bae820bc3cda79f99b8,
+                    "macro_element_2dec2f13f94068deff2a9aa0ef299dab" : geo_json_2dec2f13f94068deff2a9aa0ef299dab,
+                    "macro_element_f3a4af22c8948c41517c5a2cd7a77159" : geo_json_f3a4af22c8948c41517c5a2cd7a77159,
+                    "macro_element_6dc85ad2851562b683f727e105e36186" : geo_json_6dc85ad2851562b683f727e105e36186,
+                    "macro_element_0a1e87c4713e00a0816985cc4a51b199" : geo_json_0a1e87c4713e00a0816985cc4a51b199,
+                    "macro_element_a3a1b856ba08a52df6f2d1ab470cbe6e" : geo_json_a3a1b856ba08a52df6f2d1ab470cbe6e,
+                    "macro_element_052cd593d5984b0707fa81f68169448f" : geo_json_052cd593d5984b0707fa81f68169448f,
+                    "\ud83d\udfe2 Visitar j\u00e1 (prioridade alta)" : feature_group_bd229b6716e14e91c816ca019ca2ee6a,
+                    "\ud83d\udfe1 Validar em campo (prioridade m\u00e9dia)" : feature_group_6005b1a8c60c23fbc0b0ed5c993a0cc0,
+                    "\u26aa Suspeita / baixa prioridade" : feature_group_a89a6fc5167352504a229b9b4013e1e6,
+                },
+            };
+            let layer_control_62609c96dc215f0dcc689ec9725ce132 = L.control.layers(
+                layer_control_62609c96dc215f0dcc689ec9725ce132_layers.base_layers,
+                layer_control_62609c96dc215f0dcc689ec9725ce132_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_4c7f69f2cba71390f0a7c7785cafb2c3);
+
+        
+</script>
+</html>

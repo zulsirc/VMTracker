@@ -239,6 +239,15 @@ smoothing:
   decay: 0.6
 
 # ----------------------------------------------------------------------------
+# Cluster building (for prospection)
+# ----------------------------------------------------------------------------
+clusters:
+  score_threshold: 55.0   # cells with score >= this become eligible
+  min_cells: 2            # cluster must have at least this many cells
+  top_n: 10               # how many clusters to surface in shortlist / map / KML
+  peak_radius_rings: 2    # min H3 distance between two seeds (≈ ~350m)
+
+# ----------------------------------------------------------------------------
 # Output
 # ----------------------------------------------------------------------------
 output:

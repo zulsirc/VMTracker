@@ -90,6 +90,7 @@ def compute_score(
     features: pd.DataFrame,
     weights: dict[str, Any],
     raw_unsuitable_frac: pd.Series | None = None,
+    anchor_for_blend: pd.Series | None = None,
 ) -> tuple[pd.Series, pd.DataFrame]:
     """Return (score_0_100, breakdown_frame).
 
@@ -153,14 +154,26 @@ def compute_score(
     # Physical dominates (70%) — rank only adds spread in the low band so
     # the map reads with nuance instead of collapsing empty cells into one
     # bucket. Previous 60%-rank blend was inflating empty cells to "médio".
-    lo = float(raw.min())
-    hi = float(np.nanpercentile(raw, 97))
+    # When `anchor_for_blend` is given, use IT (typically the smoothed raw)
+    # to define lo/hi and the rank reference. That makes a second pass
+    # (direct-only / penalty-only) directly comparable to the main pass.
+    anchor = anchor_for_blend if anchor_for_blend is not None else raw
+    lo = float(anchor.min())
+    hi = float(np.nanpercentile(anchor, 97))
     if not np.isfinite(lo) or not np.isfinite(hi) or hi - lo < 1e-9:
-        lo, hi = float(raw.min()), float(raw.max()) + 1e-9
+        lo, hi = float(anchor.min()), float(anchor.max()) + 1e-9
     physical = ((raw.clip(lo, hi) - lo) / (hi - lo)).clip(0.0, 1.0)
     physical = np.sqrt(physical)
 
-    rank_pct = raw.rank(pct=True, method="average").astype(float)
+    if anchor_for_blend is not None:
+        # Rank `raw` against the anchor distribution for comparability.
+        ref = anchor.sort_values().to_numpy()
+        rank_pct = pd.Series(
+            np.searchsorted(ref, raw.to_numpy(), side="right") / max(len(ref), 1),
+            index=raw.index,
+        ).astype(float)
+    else:
+        rank_pct = raw.rank(pct=True, method="average").astype(float)
 
     mixed = 0.70 * physical + 0.30 * rank_pct
     scaled = (mixed * 100.0).clip(0.0, 100.0)

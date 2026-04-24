@@ -25,6 +25,80 @@ from src.visualization import build_map, save_map
 LOG = setup_logging()
 
 
+def _write_kml(cluster_meta: pd.DataFrame, path) -> None:
+    """Tiny KML writer for top-cluster centroids (good for GMaps/Earth)."""
+    pms: list[str] = []
+    for _, row in cluster_meta.iterrows():
+        pms.append(
+            f"""    <Placemark>
+      <name>Cluster #{int(row['cluster_id'])} — {row['bairro']}</name>
+      <description><![CDATA[
+        Cells: {int(row['n_cells'])}<br/>
+        Score mean: {row['score_mean']:.1f}<br/>
+        Score max: {row['score_max']:.1f}<br/>
+        Radius: {row['radius_m']:.0f} m
+      ]]></description>
+      <Point><coordinates>{row['centroid_lon']:.6f},{row['centroid_lat']:.6f},0</coordinates></Point>
+    </Placemark>"""
+        )
+    body = "\n".join(pms)
+    kml = (
+        f"""<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Vending Machine — Top Clusters</name>
+{body}
+  </Document>
+</kml>"""
+    )
+    from pathlib import Path as _P
+    _P(path).write_text(kml, encoding="utf-8")
+
+
+def _build_spatial_validation(
+    grid_scored: pd.DataFrame, cluster_meta: pd.DataFrame
+) -> pd.DataFrame:
+    df = grid_scored.copy()
+    cols = [
+        "h3", "lat", "lon", "cluster_id", "bairro",
+        "score", "direct_activity_score", "neighborhood_inherited_score",
+        "penalty_total", "class",
+        "raw_lu_frac_unsuitable",
+    ]
+    cols = [c for c in cols if c in df.columns]
+    out = df[cols].copy()
+    out = out.rename(columns={
+        "score": "score_final",
+        "penalty_total": "penalty_score",
+        "class": "classe_final",
+        "raw_lu_frac_unsuitable": "raw_unsuitable_frac",
+    })
+    # auto flags
+    flags = []
+    notes = []
+    for _, r in out.iterrows():
+        f: list[str] = []
+        n: list[str] = []
+        sf = float(r.get("score_final", 0) or 0)
+        da = float(r.get("direct_activity_score", 0) or 0)
+        nh = float(r.get("neighborhood_inherited_score", 0) or 0)
+        ru = float(r.get("raw_unsuitable_frac", 0) or 0)
+        if sf >= 70 and da <= 35:
+            f.append("halo_dominated")
+            n.append(f"score {sf:.0f} mas atividade direta apenas {da:.0f}")
+        if sf >= 70 and ru >= 0.3:
+            f.append("inviable_landuse_present")
+            n.append(f"raw unsuitable {ru:.2f}")
+        if sf >= 55 and nh > sf * 0.55:
+            f.append("inherited_majority")
+            n.append(f"{nh/max(sf,1)*100:.0f}% do score vem da vizinhança")
+        flags.append(",".join(f) if f else "")
+        notes.append("; ".join(n) if n else "")
+    out["flag_visual_review"] = flags
+    out["review_note"] = notes
+    return out
+
+
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Vending Machine Heatmap")
     ap.add_argument("--config", type=str, help="Path to YAML config.")
@@ -143,9 +217,30 @@ def run(cfg: dict[str, Any]) -> dict[str, Any]:
     )
     cls = S.classify(score)
 
+    # --- Anti-halo: direct vs inherited --------------------------------
+    from src import anti_halo as AH
+    direct_score, inherited_score, breakdown_direct = AH.compute_direct_and_inherited(
+        grid=grid,
+        poi_counts_unsmoothed=poi_counts,
+        road_df_unsmoothed=road_df,
+        landuse_df_unsmoothed=landuse_df,
+        features_smoothed=features,
+        anchor_proximity=anchor_prox,
+        weights=cfg["weights"],
+        score_total=score,
+        raw_total=breakdown["raw"],
+        raw_unsuitable_frac=raw_unsuitable,
+    )
+    LOG.info(
+        "anti-halo: direct mean=%.1f inherited mean=%.1f",
+        float(direct_score.mean()), float(inherited_score.mean()),
+    )
+
     grid_scored = grid.copy()
     grid_scored["score"] = score.values
     grid_scored["class"] = cls.values
+    grid_scored["direct_activity_score"] = direct_score.values
+    grid_scored["neighborhood_inherited_score"] = inherited_score.values
     for col in breakdown.columns:
         if col == "score":
             continue
@@ -195,6 +290,77 @@ def run(cfg: dict[str, Any]) -> dict[str, Any]:
     top_csv = top.drop(columns="geometry").copy()
     top_csv.to_csv(out_dir / cfg["output"]["csv_top"], index=False)
 
+    # --- Clusters & operational artifacts -----------------------------
+    from src import clusters as CL
+
+    cluster_threshold = float(cfg.get("clusters", {}).get("score_threshold", 60.0))
+    cluster_min_cells = int(cfg.get("clusters", {}).get("min_cells", 2))
+    cluster_top_n = int(cfg.get("clusters", {}).get("top_n", 10))
+    cluster_id_series, cluster_meta = CL.build_clusters(
+        grid_scored, score_threshold=cluster_threshold,
+        min_cells=cluster_min_cells,
+        peak_radius_rings=int(cfg.get("clusters", {}).get("peak_radius_rings", 3)),
+        target_clusters=cluster_top_n,
+    )
+    grid_scored["cluster_id"] = cluster_id_series.values
+    grid_scored["bairro"] = [
+        CL.nearest_bairro(lat, lon)
+        for lat, lon in zip(grid_scored["lat"], grid_scored["lon"])
+    ]
+    LOG.info("clusters built: %d (threshold=%.0f)", len(cluster_meta), cluster_threshold)
+
+    # field-visit shortlist
+    short = CL.shortlist(
+        grid_scored, cluster_meta,
+        top_n=int(cfg.get("clusters", {}).get("top_n", 10)),
+    )
+    short_path = out_dir / "field_visit_shortlist.csv"
+    short.to_csv(short_path, index=False)
+    LOG.info("wrote %s", short_path)
+
+    # clusters geojson + kml (only top N)
+    if not cluster_meta.empty:
+        from shapely.geometry import MultiPolygon, mapping
+        from shapely.ops import unary_union
+
+        top_clusters_n = int(cfg.get("clusters", {}).get("top_n", 10))
+        feats: list[dict[str, Any]] = []
+        for _, row in cluster_meta.head(top_clusters_n).iterrows():
+            cells = grid_scored.iloc[row["cell_idx"]]
+            try:
+                geom = unary_union(cells.geometry.values).buffer(0)
+            except Exception:
+                geom = MultiPolygon(list(cells.geometry.values))
+            props = {
+                "cluster_id": int(row["cluster_id"]),
+                "bairro": row["bairro"],
+                "score_mean": round(float(row["score_mean"]), 2),
+                "score_max": round(float(row["score_max"]), 2),
+                "n_cells": int(row["n_cells"]),
+                "radius_m": round(float(row["radius_m"]), 0),
+                "principais_sinais": CL.cluster_top_signals(grid_scored, row["cell_idx"]),
+            }
+            feats.append({"type": "Feature", "geometry": mapping(geom), "properties": props})
+        clusters_geojson = {"type": "FeatureCollection", "features": feats}
+        cgj_path = out_dir / "clusters_top.geojson"
+        with cgj_path.open("w", encoding="utf-8") as fh:
+            import json as _json
+            _json.dump(clusters_geojson, fh, ensure_ascii=False)
+        LOG.info("wrote %s", cgj_path)
+
+        # KML (simple)
+        kml_path = out_dir / "clusters_top.kml"
+        _write_kml(cluster_meta.head(top_clusters_n), kml_path)
+        LOG.info("wrote %s", kml_path)
+
+    # spatial validation CSV with auto-flags
+    spv = _build_spatial_validation(grid_scored, cluster_meta)
+    spv_path = out_dir.parent / "VMTracker" / "output" / "audit" / "spatial_validation.csv"
+    spv_path = out_dir / "audit" / "spatial_validation.csv"
+    spv_path.parent.mkdir(parents=True, exist_ok=True)
+    spv.to_csv(spv_path, index=False)
+    LOG.info("wrote %s", spv_path)
+
     # --- Interactive map ----------------------------------------------
     from shapely import wkt as _wkt
 
@@ -203,10 +369,22 @@ def run(cfg: dict[str, Any]) -> dict[str, Any]:
         cfg,
         top_cells=top_csv,
         study_polygon_wkt=poly.wkt,
+        cluster_meta=cluster_meta,
+        bottom_cells=grid_scored.sort_values("score").head(40).copy(),
+        poi_layers=layers["poi_layers"],
     )
     html_path = out_dir / cfg["output"]["html"]
     save_map(m, html_path)
     LOG.info("wrote %s", html_path)
+
+    # --- Field-review map (lighter) -----------------------------------
+    from src.field_review import build_field_review_map
+    fr = build_field_review_map(
+        grid_scored, cluster_meta, short, study_polygon_wkt=poly.wkt, cfg=cfg,
+    )
+    fr_path = out_dir / "field_review_map.html"
+    save_map(fr, fr_path)
+    LOG.info("wrote %s", fr_path)
 
     # --- Report --------------------------------------------------------
     stats = {
