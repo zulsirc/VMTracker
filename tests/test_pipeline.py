@@ -129,10 +129,15 @@ def test_build_map_smoke(cfg, tmp_path):
     grid["priority_tier"] = "validar_visualmente"
     grid["flag_visual_review"] = ""
     for col in [
-        "pos_food","pos_shop","pos_supermarket","pos_pharmacy","pos_education",
-        "pos_fitness","pos_healthcare","pos_office","pos_transport","pos_bank",
-        "pos_leisure","pos_residential","pos_commercial","pos_mixed_use",
+        # positive traffic generators
+        "pos_education","pos_fitness","pos_office","pos_healthcare",
+        "pos_transport","pos_bank","pos_leisure","pos_potential_host",
+        "pos_residential","pos_mixed_use",
         "pos_road_density","pos_anchor_proximity",
+        # competition
+        "comp_competition_supermarket","comp_competition_food",
+        "comp_competition_bakery","comp_competition_pharmacy",
+        # penalties
         "pen_unsuitable_landuse","pen_industrial","pen_isolation","pen_low_connectivity",
     ]:
         grid[col] = 0.0

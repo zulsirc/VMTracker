@@ -30,32 +30,37 @@ city:
 # ----------------------------------------------------------------------------
 study_area:
   bbox:
-    # Rough outer bbox used ONLY to narrow Overpass queries.
-    # Real clip is done by the polygon below + the water mask.
-    min_lon: -41.830
-    min_lat: -22.470
-    max_lon: -41.735
-    max_lat: -22.370
+    # Generous bbox: covers everything from Ponte da Barra westward and
+    # southward. Used only to narrow Overpass queries; the polygon below
+    # plus the water mask define what actually scores.
+    min_lon: -41.875
+    min_lat: -22.495
+    max_lon: -41.775
+    max_lat: -22.380
   polygon:
-    # [lon, lat] pairs — south-side urban core of Macaé.
-    # East edge hugs the coastline tighter than before so few maritime
-    # cells slip through; the water-mask below catches the rest (lagoa
-    # Imboassica, river mouth, sea).
-    - [-41.825, -22.460]  # SW (avoid pure beach south of Lagomar)
-    - [-41.795, -22.460]  # S
-    - [-41.785, -22.452]  # Riviera / Costa do Sol
-    - [-41.781, -22.440]  # Praia Campista (coast)
-    - [-41.781, -22.425]  # Cavaleiros beach
-    - [-41.783, -22.413]  # Cavaleiros norte
-    - [-41.785, -22.402]  # Imbetiba
-    - [-41.785, -22.395]  # Aroeira / Imbetiba sul
-    - [-41.787, -22.388]  # near river mouth (south bank)
-    - [-41.802, -22.388]  # south of Ponte da Barra
-    - [-41.812, -22.392]  # western bank, south of river
-    - [-41.825, -22.405]  # W
-    - [-41.825, -22.460]  # close
-  # Drop cells whose centroid is in OSM natural=water OR whose area
-  # overlap with water exceeds this fraction.
+    # ENTIRE south zone: Centro/Imbetiba/Cavaleiros (east) → Granja dos
+    # Cavaleiros / Glória / São Marcos (mid) → Cancela Preta /
+    # Bosque Azul / Virgem Santa / Nova Holanda (west) →
+    # Costa do Sol / Riviera Fluminense / Lagomar (south).
+    # Vertices ordered NE→SE→SW→NW for a clean polygon.
+    - [-41.792, -22.385]  # NE — south bank of Rio Macaé, near Ponte da Barra
+    - [-41.785, -22.388]
+    - [-41.781, -22.395]  # Imbetiba coast
+    - [-41.780, -22.420]  # Cavaleiros coast
+    - [-41.781, -22.440]  # Praia Campista coast
+    - [-41.785, -22.460]  # Costa do Sol coast
+    - [-41.795, -22.482]  # Lagomar south
+    - [-41.815, -22.490]  # SW corner of urbanized area
+    - [-41.850, -22.488]
+    - [-41.872, -22.470]
+    - [-41.875, -22.450]  # W
+    - [-41.875, -22.420]
+    - [-41.870, -22.405]  # NW — Cancela Preta west
+    - [-41.860, -22.395]
+    - [-41.840, -22.388]
+    - [-41.820, -22.385]  # Centro/Botafogo south of river
+    - [-41.800, -22.385]
+    - [-41.792, -22.385]  # close
   water_mask:
     enabled: true
     overlap_threshold: 0.30
@@ -86,37 +91,27 @@ overpass:
 # Each category accumulates one "feature count" per cell.
 # Weights below combine them into the final score.
 # ----------------------------------------------------------------------------
+# Two-axis categorization for vending-machine prospection:
+#
+#   TRAFFIC GENERATORS  → bring foot traffic that consumes vending without
+#                         direct competition (school, gym, office, hospital).
+#                         Counted as POSITIVE in the cell score.
+#
+#   COMPETITORS         → POIs that sell snacks/drinks/conveniência directly
+#                         (supermarket, mercearia, padaria, lanchonete, food
+#                         court, fast food, cafe, bar, farmácia, conveniência).
+#                         Counted as NEGATIVE in the cell score — they eat
+#                         vending demand.
+#
+#   POTENTIAL HOSTS     → non-food shops where the machine could plausibly be
+#                         installed (papelaria, salão, lavanderia, oficina,
+#                         clothes, shoes, etc.). Counted as POSITIVE — at the
+#                         cell level, more candidate hosts = better.
+#
 poi_categories:
-  shop:
-    query:
-      - "shop"
-  supermarket:
-    query:
-      - "shop=supermarket"
-      - "shop=convenience"
-      - "shop=mall"
-      - "shop=department_store"
-  food:
-    query:
-      - "amenity=restaurant"
-      - "amenity=fast_food"
-      - "amenity=cafe"
-      - "amenity=bar"
-      - "amenity=food_court"
-      - "amenity=ice_cream"
-  pharmacy:
-    query:
-      - "amenity=pharmacy"
-      - "healthcare=pharmacy"
-  healthcare:
-    query:
-      - "amenity=hospital"
-      - "amenity=clinic"
-      - "amenity=doctors"
-      - "healthcare=clinic"
-      - "healthcare=hospital"
-      - "healthcare=doctor"
+  # ------------------------------------------------------------ traffic
   education:
+    role: traffic
     query:
       - "amenity=school"
       - "amenity=college"
@@ -124,19 +119,32 @@ poi_categories:
       - "amenity=kindergarten"
       - "amenity=language_school"
   fitness:
+    role: traffic
     query:
       - "leisure=fitness_centre"
       - "leisure=sports_centre"
       - "sport=fitness"
+  healthcare:
+    role: traffic
+    query:
+      - "amenity=hospital"
+      - "amenity=clinic"
+      - "amenity=doctors"
+      - "healthcare=clinic"
+      - "healthcare=hospital"
+      - "healthcare=doctor"
   office:
+    role: traffic
     query:
       - "office"
       - "amenity=coworking_space"
   bank:
+    role: traffic
     query:
       - "amenity=bank"
       - "amenity=atm"
   transport:
+    role: traffic
     query:
       - "highway=bus_stop"
       - "public_transport=stop_position"
@@ -144,6 +152,7 @@ poi_categories:
       - "amenity=bus_station"
       - "railway=station"
   leisure:
+    role: traffic
     query:
       - "leisure=park"
       - "leisure=playground"
@@ -151,8 +160,66 @@ poi_categories:
       - "tourism=attraction"
       - "tourism=hotel"
   fuel:
+    role: traffic
     query:
       - "amenity=fuel"
+
+  # --------------------------------------------------------- competitors
+  competition_food:
+    role: competition
+    query:
+      - "amenity=restaurant"
+      - "amenity=fast_food"
+      - "amenity=cafe"
+      - "amenity=bar"
+      - "amenity=pub"
+      - "amenity=food_court"
+      - "amenity=ice_cream"
+  competition_supermarket:
+    role: competition
+    query:
+      - "shop=supermarket"
+      - "shop=convenience"
+      - "shop=mall"
+      - "shop=department_store"
+      - "shop=greengrocer"
+      - "shop=deli"
+      - "shop=butcher"
+      - "shop=kiosk"
+  competition_bakery:
+    role: competition
+    query:
+      - "shop=bakery"
+      - "shop=confectionery"
+      - "shop=pastry"
+      - "shop=chocolate"
+  competition_pharmacy:
+    role: competition
+    query:
+      - "amenity=pharmacy"
+      - "healthcare=pharmacy"
+
+  # --------------------------------------------------------- potential hosts
+  # All shops EXCEPT the ones tagged as competition above. We still query
+  # `shop` (broad) and the source filter at runtime drops the competition
+  # subtypes so we don't double-count.
+  potential_host:
+    role: host
+    query:
+      - "shop"
+    drop_subtypes:
+      - "supermarket"
+      - "convenience"
+      - "mall"
+      - "department_store"
+      - "greengrocer"
+      - "deli"
+      - "butcher"
+      - "kiosk"
+      - "bakery"
+      - "confectionery"
+      - "pastry"
+      - "chocolate"
 
 # ----------------------------------------------------------------------------
 # Landuse / context (used for penalties + context, NOT scored as POI count)
@@ -211,33 +278,37 @@ roads:
 # ----------------------------------------------------------------------------
 weights:
   positive:
-    food:          1.6
-    shop:          1.4
-    supermarket:   1.3
-    pharmacy:      1.1
-    fitness:       1.0
-    education:     1.2
-    healthcare:    1.0
-    office:        1.0
-    bank:          0.7
-    transport:     1.1
-    leisure:       0.6
-    fuel:          0.5
-    residential:   1.0   # density of residential footprints
-    commercial:    1.2   # density of commercial footprints
-    mixed_use:        1.5   # diversity across categories
-    road_density:     1.0   # connectivity signal
-    anchor_proximity: 1.8   # distance-decay to nearest strong POI (continuous)
+    # ---- traffic generators (foot traffic, NOT competing with vending) ----
+    education:        1.4   # estudantes = público vending por excelência
+    fitness:          1.2   # academia = audiência cativa
+    office:           1.2   # trabalhadores
+    healthcare:       1.0   # hospital/clínica = espera + visitantes
+    transport:        1.0   # paradas = fluxo de passagem
+    bank:             0.6   # fluxo curto, mas regular
+    leisure:          0.5   # parque/lazer; turismo cobre orla via cenário
+    fuel:             0.4   # frentista + clientes brevemente parados
+    # ---- demand proxies (not direct POIs) -----------------
+    residential:      1.5   # densidade habitacional = demanda de base
+    mixed_use:        0.8   # diversidade DOS GERADORES de tráfego (não comércio)
+    road_density:     0.8   # conectividade — chega lá fácil
+    anchor_proximity: 1.5   # distância a um gerador de tráfego forte
+    # ---- non-food shops that COULD HOST the machine -----
+    potential_host:   1.0   # cada papelaria/salão/lavanderia adjacente vale
 
-  # Penalties subtract from the raw score before clipping to 0..100.
-  # We keep unsuitable_landuse strong (nature/water/airport must read deep red)
-  # and isolation/low_connectivity softer so urban-but-quiet cells still get
-  # differentiated nuance instead of piling up on a single red bucket.
+  # Negative weights for direct competitors. These SUBTRACT from the cell
+  # score because they sell the same things a vending machine does.
+  competition:
+    competition_supermarket: 2.0   # supermercado/conveniência = competidor #1
+    competition_food:        1.6   # restaurante/lanchonete/bar/fast-food
+    competition_bakery:      1.5   # padaria/confeitaria
+    competition_pharmacy:    0.8   # farmácia (snack no caixa, mas auxiliar)
+
+  # Geographic/landuse penalties (independent of POIs)
   penalties:
-    unsuitable_landuse: 2.2   # water / wood / farmland / airport etc
-    industrial:         0.4   # light penalty
-    isolation:          0.9   # few POIs in surrounding cells → isolated
-    low_connectivity:   0.4   # very little road length
+    unsuitable_landuse: 2.5   # água/mata/aeródromo/militar/agrícola
+    industrial:         0.3
+    isolation:          1.0   # se nada de tráfego ao redor, a célula morre
+    low_connectivity:   0.4
 
 # ----------------------------------------------------------------------------
 # Spatial smoothing — simulate walking/catchment radius.

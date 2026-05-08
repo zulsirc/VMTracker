@@ -128,7 +128,20 @@ def fetch_all_layers(cfg: dict[str, Any], ds: DataSources) -> dict[str, Any]:
     for cat, spec in cfg["poi_categories"].items():
         raw = ds.fetch_poi(cat, spec["query"])
         gdf = G.overpass_to_gdf(raw)
-        LOG.info("POI[%s]: %d elements", cat, len(gdf))
+        # If the spec lists `drop_subtypes`, remove rows whose tags match
+        # those subtypes — used by the `potential_host` category to subtract
+        # the food/conv subtypes that already live in `competition_*`.
+        drop_sub = spec.get("drop_subtypes") or []
+        if drop_sub and not gdf.empty:
+            def _keep(tags: dict) -> bool:
+                if not isinstance(tags, dict):
+                    return True
+                shop = tags.get("shop")
+                amen = tags.get("amenity")
+                return (shop not in drop_sub) and (amen not in drop_sub)
+            mask = gdf["tags"].apply(_keep)
+            gdf = gdf[mask].reset_index(drop=True)
+        LOG.info("POI[%s]: %d elements (role=%s)", cat, len(gdf), spec.get("role", "?"))
         poi_layers[cat] = gdf
 
     landuse_layers: dict[str, gpd.GeoDataFrame] = {}

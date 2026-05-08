@@ -5,68 +5,68 @@
     <Placemark>
       <name>Rota de campo — Dia 2 — rota</name>
       <LineString><tessellate>1</tessellate>
-        <coordinates>-41.794057,-22.391136,0 -41.803832,-22.393210,0 -41.801766,-22.407406,0 -41.809716,-22.410421,0 -41.814648,-22.415763,0 -41.818096,-22.402649,0</coordinates>
+        <coordinates>-41.817595,-22.389185,0 -41.847155,-22.402996,0 -41.819485,-22.402829,0 -41.811251,-22.405321,0 -41.798178,-22.391348,0 -41.783955,-22.397573,0</coordinates>
       </LineString>
     </Placemark>
     <Placemark>
-      <name>#1 — Visconde de Araújo (média)</name>
+      <name>#1 — São Marcos (alta)</name>
       <description><![CDATA[
-        Cluster: 12 | Super: 11<br/>
-        Score médio: 68.3<br/>
-        1 micro-cluster(s) unidos; 28 cells; score médio 68; proximidade a âncoras + conectividade viária + diversidade de usos + comércio.<br/><br/>
+        Cluster: 16|30 | Super: 6<br/>
+        Score médio: 93.9<br/>
+        2 micro-cluster(s) unidos; 52 cells; score médio 94; escritórios + proximidade a âncoras + diversidade de usos + conectividade viária.<br/><br/>
         <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
       ]]></description>
-      <Point><coordinates>-41.794057,-22.391136,0</coordinates></Point>
+      <Point><coordinates>-41.817595,-22.389185,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>#2 — Morro de São Jorge (média)</name>
+      <name>#2 — Cancela Preta (alta)</name>
       <description><![CDATA[
-        Cluster: 9|11 | Super: 10<br/>
-        Score médio: 69.7<br/>
-        2 micro-cluster(s) unidos; 63 cells; score médio 70; proximidade a âncoras + diversidade de usos + densidade residencial + saúde.<br/><br/>
+        Cluster: 14 | Super: 10<br/>
+        Score médio: 88.9<br/>
+        1 micro-cluster(s) unidos; 47 cells; score médio 89; proximidade a âncoras + escritórios + densidade residencial + educação.<br/><br/>
         <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
       ]]></description>
-      <Point><coordinates>-41.803832,-22.393210,0</coordinates></Point>
+      <Point><coordinates>-41.847155,-22.402996,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>#3 — Bosque Azul (média)</name>
+      <name>#3 — São Marcos (alta)</name>
       <description><![CDATA[
-        Cluster: 3|14 | Super: 4<br/>
-        Score médio: 85.3<br/>
-        2 micro-cluster(s) unidos; 55 cells; score médio 85; proximidade a âncoras + alimentação + diversidade de usos + academia.<br/><br/>
+        Cluster: 24 | Super: 12<br/>
+        Score médio: 87.4<br/>
+        1 micro-cluster(s) unidos; 32 cells; score médio 87; proximidade a âncoras + transporte + educação + densidade residencial.<br/><br/>
         <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
       ]]></description>
-      <Point><coordinates>-41.801766,-22.407406,0</coordinates></Point>
+      <Point><coordinates>-41.819485,-22.402829,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>#4 — Bosque Azul (média)</name>
+      <name>#4 — Bosque Azul (alta)</name>
       <description><![CDATA[
-        Cluster: 6 | Super: 8<br/>
-        Score médio: 73.7<br/>
-        1 micro-cluster(s) unidos; 43 cells; score médio 74; proximidade a âncoras + diversidade de usos + mercado/conveniência + alimentação.<br/><br/>
+        Cluster: 20 | Super: 9<br/>
+        Score médio: 88.6<br/>
+        1 micro-cluster(s) unidos; 35 cells; score médio 89; proximidade a âncoras + educação + transporte + academia.<br/><br/>
         <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
       ]]></description>
-      <Point><coordinates>-41.809716,-22.410421,0</coordinates></Point>
+      <Point><coordinates>-41.811251,-22.405321,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>#5 — Virgem Santa (média)</name>
+      <name>#5 — Visconde de Araújo (alta)</name>
       <description><![CDATA[
-        Cluster: 15 | Super: 12<br/>
-        Score médio: 62.7<br/>
-        1 micro-cluster(s) unidos; 21 cells; score médio 63; proximidade a âncoras + diversidade de usos + alimentação + educação.<br/><br/>
+        Cluster: 10 | Super: 11<br/>
+        Score médio: 86.5<br/>
+        1 micro-cluster(s) unidos; 54 cells; score médio 86; proximidade a âncoras + conectividade viária + densidade residencial + educação.<br/><br/>
         <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
       ]]></description>
-      <Point><coordinates>-41.814648,-22.415763,0</coordinates></Point>
+      <Point><coordinates>-41.798178,-22.391348,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>#6 — Nova Holanda (média)</name>
+      <name>#6 — Glória (alta)</name>
       <description><![CDATA[
-        Cluster: 8|16 | Super: 9<br/>
-        Score médio: 72.8<br/>
-        2 micro-cluster(s) unidos; 40 cells; score médio 73; proximidade a âncoras + diversidade de usos + transporte + educação.<br/><br/>
+        Cluster: 19 | Super: 8<br/>
+        Score médio: 88.5<br/>
+        1 micro-cluster(s) unidos; 40 cells; score médio 88; proximidade a âncoras + academia + educação + diversidade de usos.<br/><br/>
         <i>Caminhar o corredor inteiro; validar presença de comércio denso + fluxo; anotar hosts candidatos (padaria, farmácia, academia, mercado, salão).</i>
       ]]></description>
-      <Point><coordinates>-41.818096,-22.402649,0</coordinates></Point>
+      <Point><coordinates>-41.783955,-22.397573,0</coordinates></Point>
     </Placemark>
   </Document>
 </kml>

@@ -32,19 +32,25 @@ def robust_minmax(series: pd.Series, p_low: float = 0.0, p_high: float = 0.95) -
 # Feature assembly
 # ----------------------------------------------------------------------------
 # Map weight-key -> underlying column in the smoothed POI counts frame.
+# --- POSITIVE traffic generators (counts of foot-traffic POIs) ---
 POI_WEIGHT_MAP: dict[str, str] = {
-    "food": "count_food_s",
-    "shop": "count_shop_s",
-    "supermarket": "count_supermarket_s",
-    "pharmacy": "count_pharmacy_s",
-    "fitness": "count_fitness_s",
-    "education": "count_education_s",
-    "healthcare": "count_healthcare_s",
-    "office": "count_office_s",
-    "bank": "count_bank_s",
-    "transport": "count_transport_s",
-    "leisure": "count_leisure_s",
-    "fuel": "count_fuel_s",
+    "education":      "count_education_s",
+    "fitness":        "count_fitness_s",
+    "healthcare":     "count_healthcare_s",
+    "office":         "count_office_s",
+    "bank":           "count_bank_s",
+    "transport":      "count_transport_s",
+    "leisure":        "count_leisure_s",
+    "fuel":           "count_fuel_s",
+    "potential_host": "count_potential_host_s",
+}
+
+# --- NEGATIVE direct competitors (counts of competing POIs) ---
+COMPETITION_WEIGHT_MAP: dict[str, str] = {
+    "competition_food":        "count_competition_food_s",
+    "competition_supermarket": "count_competition_supermarket_s",
+    "competition_bakery":      "count_competition_bakery_s",
+    "competition_pharmacy":    "count_competition_pharmacy_s",
 }
 
 
@@ -59,7 +65,12 @@ def assemble_feature_frame(
 ) -> pd.DataFrame:
     feats = pd.DataFrame(index=grid_index)
 
+    # positive traffic generators
     for key, col in POI_WEIGHT_MAP.items():
+        feats[key] = poi_counts_smoothed[col] if col in poi_counts_smoothed.columns else 0.0
+
+    # negative competitor counts
+    for key, col in COMPETITION_WEIGHT_MAP.items():
         feats[key] = poi_counts_smoothed[col] if col in poi_counts_smoothed.columns else 0.0
 
     feats["residential"] = landuse_df.get("lu_frac_residential", pd.Series(0.0, index=grid_index))
@@ -76,7 +87,6 @@ def assemble_feature_frame(
     else:
         feats["anchor_proximity"] = anchor_proximity.values
 
-    # low connectivity: 1 - normalized road density (roughly)
     rd_norm = robust_minmax(feats["road_density"], 0.0, 0.95)
     feats["low_connectivity"] = (1.0 - rd_norm).clip(0.0, 1.0)
 
@@ -102,6 +112,7 @@ def compute_score(
     """
     pos_w = weights["positive"]
     pen_w = weights["penalties"]
+    comp_w = weights.get("competition", {})  # NEW: competitors
 
     breakdown = pd.DataFrame(index=features.index)
 
@@ -116,7 +127,18 @@ def compute_score(
         pos_total = pos_total.add(contrib, fill_value=0.0)
     breakdown["positive_total"] = pos_total
 
-    # --- penalties ------------------------------------------------------
+    # --- competition (subtract directly competing POIs) ---------------
+    comp_total = pd.Series(0.0, index=features.index)
+    for key, w in comp_w.items():
+        if key not in features.columns:
+            continue
+        norm = robust_minmax(features[key], 0.0, 0.95)
+        contrib = norm * float(w)
+        breakdown[f"comp_{key}"] = contrib
+        comp_total = comp_total.add(contrib, fill_value=0.0)
+    breakdown["competition_total"] = comp_total
+
+    # --- penalties (geographic) -----------------------------------------
     pen_total = pd.Series(0.0, index=features.index)
 
     if "unsuitable_landuse" in pen_w and "unsuitable_frac" in features.columns:
@@ -146,7 +168,8 @@ def compute_score(
     breakdown["penalty_total"] = pen_total
 
     # --- combine + rescale ---------------------------------------------
-    raw = pos_total - pen_total
+    # raw = positives  −  competition  −  geographic penalties
+    raw = pos_total - comp_total - pen_total
 
     # Blend two normalizations so the final score is both:
     #   1) ordinally correct     (preserves rank)

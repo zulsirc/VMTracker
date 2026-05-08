@@ -2,7 +2,7 @@
 
 ![](05_mid_zone.png)
 
-- **lat / lon / zoom**: -22.41637, -41.81378, z=16
+- **lat / lon / zoom**: -22.41981, -41.84984, z=16
 
 ## O que deveria ser visto
 Célula score 60 (classe médio); direct=30 inherited=30. Esperado: cor amarela/clara com basemap mostrando residencial moderado, alguma rua arterial, sem aglomeração comercial densa.

@@ -3,104 +3,104 @@
   <Document>
     <name>Vending Machine — Top Clusters</name>
     <Placemark>
-      <name>Cluster #1 — Granja dos Cavaleiros</name>
+      <name>Cluster #1 — Aphaville (Costa do Sol)</name>
+      <description><![CDATA[
+        Cells: 148<br/>
+        Score mean: 82.7<br/>
+        Score max: 99.8<br/>
+        Radius: 964 m
+      ]]></description>
+      <Point><coordinates>-41.867920,-22.449463,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>Cluster #2 — Novo Horizonte</name>
+      <description><![CDATA[
+        Cells: 158<br/>
+        Score mean: 73.0<br/>
+        Score max: 81.1<br/>
+        Radius: 951 m
+      ]]></description>
+      <Point><coordinates>-41.844994,-22.432441,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>Cluster #3 — Novo Horizonte</name>
+      <description><![CDATA[
+        Cells: 111<br/>
+        Score mean: 75.8<br/>
+        Score max: 93.3<br/>
+        Radius: 1030 m
+      ]]></description>
+      <Point><coordinates>-41.865215,-22.433535,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>Cluster #4 — Cancela Preta</name>
+      <description><![CDATA[
+        Cells: 109<br/>
+        Score mean: 68.6<br/>
+        Score max: 87.6<br/>
+        Radius: 922 m
+      ]]></description>
+      <Point><coordinates>-41.855571,-22.400569,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>Cluster #5 — Aroeira</name>
+      <description><![CDATA[
+        Cells: 68<br/>
+        Score mean: 81.8<br/>
+        Score max: 93.1<br/>
+        Radius: 683 m
+      ]]></description>
+      <Point><coordinates>-41.789555,-22.391057,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>Cluster #6 — Nova Holanda</name>
       <description><![CDATA[
         Cells: 41<br/>
-        Score mean: 94.5<br/>
+        Score mean: 98.6<br/>
         Score max: 100.0<br/>
-        Radius: 593 m
+        Radius: 563 m
       ]]></description>
-      <Point><coordinates>-41.798432,-22.399330,0</coordinates></Point>
+      <Point><coordinates>-41.804332,-22.397933,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #2 — Glória</name>
+      <name>Cluster #7 — Bosque Azul</name>
       <description><![CDATA[
-        Cells: 38<br/>
-        Score mean: 95.4<br/>
-        Score max: 99.5<br/>
-        Radius: 496 m
-      ]]></description>
-      <Point><coordinates>-41.790451,-22.397357,0</coordinates></Point>
-    </Placemark>
-    <Placemark>
-      <name>Cluster #3 — Bosque Azul</name>
-      <description><![CDATA[
-        Cells: 36<br/>
-        Score mean: 94.5<br/>
+        Cells: 40<br/>
+        Score mean: 98.9<br/>
         Score max: 99.9<br/>
-        Radius: 485 m
+        Radius: 546 m
       ]]></description>
-      <Point><coordinates>-41.801733,-22.405858,0</coordinates></Point>
+      <Point><coordinates>-41.804461,-22.405822,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #4 — Glória</name>
+      <name>Cluster #8 — Cancela Preta</name>
       <description><![CDATA[
-        Cells: 37<br/>
-        Score mean: 88.7<br/>
-        Score max: 99.7<br/>
-        Radius: 476 m
+        Cells: 83<br/>
+        Score mean: 73.3<br/>
+        Score max: 92.8<br/>
+        Radius: 1080 m
       ]]></description>
-      <Point><coordinates>-41.794043,-22.405671,0</coordinates></Point>
+      <Point><coordinates>-41.867666,-22.423924,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #5 — Nova Holanda</name>
-      <description><![CDATA[
-        Cells: 36<br/>
-        Score mean: 83.6<br/>
-        Score max: 90.4<br/>
-        Radius: 652 m
-      ]]></description>
-      <Point><coordinates>-41.808556,-22.402872,0</coordinates></Point>
-    </Placemark>
-    <Placemark>
-      <name>Cluster #6 — Bosque Azul</name>
+      <name>Cluster #9 — São Marcos</name>
       <description><![CDATA[
         Cells: 43<br/>
-        Score mean: 73.7<br/>
-        Score max: 86.4<br/>
-        Radius: 549 m
+        Score mean: 94.8<br/>
+        Score max: 99.7<br/>
+        Radius: 556 m
       ]]></description>
-      <Point><coordinates>-41.809716,-22.410421,0</coordinates></Point>
+      <Point><coordinates>-41.812375,-22.396484,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #7 — Nova Holanda</name>
+      <name>Cluster #10 — Visconde de Araújo</name>
       <description><![CDATA[
-        Cells: 37<br/>
-        Score mean: 77.0<br/>
-        Score max: 82.5<br/>
-        Radius: 559 m
+        Cells: 54<br/>
+        Score mean: 86.5<br/>
+        Score max: 100.0<br/>
+        Radius: 671 m
       ]]></description>
-      <Point><coordinates>-41.812074,-22.397002,0</coordinates></Point>
-    </Placemark>
-    <Placemark>
-      <name>Cluster #8 — Nova Holanda</name>
-      <description><![CDATA[
-        Cells: 30<br/>
-        Score mean: 75.9<br/>
-        Score max: 81.1<br/>
-        Radius: 430 m
-      ]]></description>
-      <Point><coordinates>-41.816739,-22.402139,0</coordinates></Point>
-    </Placemark>
-    <Placemark>
-      <name>Cluster #9 — Morro de São Jorge</name>
-      <description><![CDATA[
-        Cells: 32<br/>
-        Score mean: 72.0<br/>
-        Score max: 80.1<br/>
-        Radius: 514 m
-      ]]></description>
-      <Point><coordinates>-41.806756,-22.393170,0</coordinates></Point>
-    </Placemark>
-    <Placemark>
-      <name>Cluster #10 — Aroeira</name>
-      <description><![CDATA[
-        Cells: 23<br/>
-        Score mean: 79.7<br/>
-        Score max: 91.0<br/>
-        Radius: 460 m
-      ]]></description>
-      <Point><coordinates>-41.787807,-22.392019,0</coordinates></Point>
+      <Point><coordinates>-41.798178,-22.391348,0</coordinates></Point>
     </Placemark>
   </Document>
 </kml>

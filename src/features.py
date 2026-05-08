@@ -52,7 +52,7 @@ def compute_anchor_proximity(
     grid: gpd.GeoDataFrame,
     poi_layers: dict[str, gpd.GeoDataFrame],
     anchor_categories: tuple[str, ...] = (
-        "food", "shop", "supermarket", "pharmacy", "transport",
+        "education", "fitness", "transport", "healthcare", "office",
     ),
 ) -> pd.Series:
     """Return a 0..1 proximity signal: 1 near a strong anchor, fading to 0.

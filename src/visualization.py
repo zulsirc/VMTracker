@@ -167,24 +167,35 @@ def _add_grid_layer(
                         "direct_activity_score", "neighborhood_inherited_score",
                         "priority_tier", "flag_visual_review",
                         "class", "bairro", "cluster_id",
-                        "pos_food", "pos_shop", "pos_supermarket", "pos_pharmacy",
-                        "pos_education", "pos_fitness", "pos_healthcare", "pos_office",
-                        "pos_transport", "pos_bank", "pos_leisure", "pos_residential",
-                        "pos_commercial", "pos_mixed_use", "pos_road_density",
-                        "pos_anchor_proximity",
+                        # POSITIVE traffic generators
+                        "pos_education", "pos_fitness", "pos_healthcare",
+                        "pos_office", "pos_transport", "pos_bank",
+                        "pos_leisure", "pos_potential_host",
+                        "pos_residential", "pos_mixed_use",
+                        "pos_road_density", "pos_anchor_proximity",
+                        # NEGATIVE direct competitors
+                        "comp_competition_supermarket", "comp_competition_food",
+                        "comp_competition_bakery", "comp_competition_pharmacy",
+                        # geographic penalties
                         "pen_unsuitable_landuse", "pen_industrial",
                         "pen_isolation", "pen_low_connectivity"],
                 aliases=["Score final:", "Actionability:",
                          "Atividade própria:", "Herdada:",
                          "Tier:", "Flags:",
                          "Classe:", "Bairro:", "Cluster:",
-                         "alimentação:", "comércio:", "mercado:", "farmácia:",
-                         "educação:", "academia:", "saúde:", "escritórios:",
-                         "transporte:", "bancos:", "lazer:", "residencial:",
-                         "comercial:", "mixed-use:", "conectividade:", "anchor prox.:",
+                         # positive
+                         "+ educação:", "+ academia:", "+ saúde:",
+                         "+ escritórios:", "+ transporte:", "+ bancos:",
+                         "+ lazer:", "+ host candidato:",
+                         "+ residencial:", "+ diversidade tráfego:",
+                         "+ conectividade:", "+ proximidade gerador:",
+                         # competition
+                         "− supermercado/conv.:", "− food/lanchonete:",
+                         "− padaria/confeit.:", "− farmácia:",
+                         # penalties
                          "PEN inviável:", "PEN industrial:",
                          "PEN isolamento:", "PEN baixa conectividade:"],
-                labels=True, max_width=400,
+                labels=True, max_width=420,
             ),
         )
     layer.add_to(fg)
@@ -227,44 +238,11 @@ def build_map(
                     fill_opacity=fill_opacity, line_opacity=line_opacity,
                     show=True)
 
-    # Direct activity only (no smoothing)
-    if "direct_activity_score" in grid.columns:
-        _add_grid_layer(m, grid, cm,
-                        name="🎯 Atividade própria (direct only)",
-                        value_col="direct_activity_score",
-                        fill_opacity=fill_opacity, line_opacity=line_opacity,
-                        show=False)
-
-    # Neighborhood-inherited only
-    if "neighborhood_inherited_score" in grid.columns:
-        _add_grid_layer(m, grid, cm,
-                        name="🌐 Herdado da vizinhança (inherited only)",
-                        value_col="neighborhood_inherited_score",
-                        fill_opacity=fill_opacity, line_opacity=line_opacity,
-                        show=False)
-
-    # Penalties only — show as a red-only colormap
-    if "penalty_total" in grid.columns:
-        pen_cm = bcm.LinearColormap(
-            colors=["#ffffff", "#ffd5d5", "#fc8d59", "#e34a33", "#b30000"],
-            vmin=0, vmax=float(grid["penalty_total"].max() or 1),
-        )
-        gpen = grid.copy()
-        for c in gpen.select_dtypes(include="float").columns:
-            gpen[c] = gpen[c].round(3)
-        fg_pen = folium.FeatureGroup(name="🔴 Penalidades (penalty only)", show=False)
-        folium.GeoJson(
-            gpen.to_json(),
-            style_function=_gradient_style("penalty_total", pen_cm, 0.5, 0.1),
-            tooltip=folium.features.GeoJsonTooltip(
-                fields=["score", "penalty_total", "pen_unsuitable_landuse",
-                        "pen_isolation", "pen_low_connectivity"],
-                aliases=["Score:", "Penalidade total:", "PEN inviável:",
-                         "PEN isolamento:", "PEN baixa conectividade:"],
-                sticky=True, labels=True,
-            ),
-        ).add_to(fg_pen)
-        fg_pen.add_to(m)
+    # NOTE: previous versions had three duplicate GeoJson layers (direct,
+    # inherited, penalties) that ballooned the HTML at res 10 (5k+ cells).
+    # The popup of the main Score layer already shows the same breakdown,
+    # so we don't need separate visual layers. Drop them to keep the page
+    # under ~20 MB.
 
     # Smoothed heatmap (centroids weighted by score)
     if cfg["map"].get("include_heatmap_layer", True):
@@ -373,7 +351,8 @@ def build_map(
     score_label_layer = folium.FeatureGroup(name="🔢 Score (números)", show=True)
     for r in grid.itertuples(index=False):
         s = float(getattr(r, "score", 0) or 0)
-        if s < 30:
+        # Higher threshold at res 10 to keep label count manageable.
+        if s < 50:
             continue
         # color logic: dark text on light cells, white text on dark cells
         cm_local = _make_colormap()
@@ -428,21 +407,34 @@ def build_map(
             ).add_to(bcluster)
         bcluster.add_to(m)
 
-    # POIs by category as separate togglable layers
+    # POI markers — only show categories that are operationally useful:
+    # potential_host (where you can install) + competitors (avoid). Skip
+    # generic traffic-generators to keep the HTML small.
     if poi_layers:
-        for cat, gdf in poi_layers.items():
+        emphasis = {
+            "potential_host":          ("#0a8f3a", "🏪 Hosts candidatos"),
+            "competition_supermarket": ("#b30000", "⚠️ Mercado/conveniência"),
+            "competition_food":        ("#d77400", "⚠️ Lanchonete/bar/food"),
+            "competition_bakery":      ("#a34e00", "⚠️ Padaria/confeit."),
+            "competition_pharmacy":    ("#852a2a", "⚠️ Farmácia"),
+        }
+        for cat, (color, label) in emphasis.items():
+            gdf = poi_layers.get(cat)
             if gdf is None or gdf.empty:
                 continue
             pts = gdf[gdf.geometry.geom_type == "Point"]
             if pts.empty:
                 continue
-            cat_layer = folium.FeatureGroup(name=f"POI · {cat} ({len(pts)})", show=False)
+            cat_layer = folium.FeatureGroup(
+                name=f"{label} ({len(pts)})", show=(cat == "potential_host"),
+            )
             for _, r in pts.iterrows():
+                tags = r.get("tags", {}) or {}
                 folium.CircleMarker(
                     location=[r.geometry.y, r.geometry.x],
-                    radius=2.5, color="#222", weight=0.5,
-                    fillColor="#3a89c9", fillOpacity=0.85,
-                    tooltip=f"{cat}: {r.get('tags', {}).get('name', '?')}",
+                    radius=3.5, color="#000", weight=0.5,
+                    fillColor=color, fillOpacity=0.85,
+                    tooltip=f"{label}: {tags.get('name', tags.get('shop', tags.get('amenity', '?')))}",
                 ).add_to(cat_layer)
             cat_layer.add_to(m)
 
