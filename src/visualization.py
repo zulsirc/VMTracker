@@ -367,6 +367,32 @@ def build_map(
         sc_layer.add_to(m)
         sc_labels.add_to(m)
 
+    # Numeric score labels per cell — toggleable, default ON for cells
+    # whose score is at least 30 (skip the deep-red empties to avoid
+    # cluttering the periphery).
+    score_label_layer = folium.FeatureGroup(name="🔢 Score (números)", show=True)
+    for r in grid.itertuples(index=False):
+        s = float(getattr(r, "score", 0) or 0)
+        if s < 30:
+            continue
+        # color logic: dark text on light cells, white text on dark cells
+        cm_local = _make_colormap()
+        rgb = cm_local(s)
+        text_color = "#000" if s >= 40 and s < 80 else ("#fff" if s >= 80 else "#fff")
+        folium.Marker(
+            location=[float(r.lat), float(r.lon)],
+            icon=folium.DivIcon(
+                html=(
+                    f"<div style='font:10px/1 sans-serif;font-weight:bold;"
+                    f"color:{text_color};text-align:center;width:32px;"
+                    f"text-shadow:0 0 2px rgba(0,0,0,.7),0 0 2px rgba(255,255,255,.5);"
+                    f"pointer-events:none'>{int(round(s))}</div>"
+                ),
+                icon_size=(32, 12), icon_anchor=(16, 6),
+            ),
+        ).add_to(score_label_layer)
+    score_label_layer.add_to(m)
+
     # Top-40 markers
     if top_cells is not None and not top_cells.empty:
         cluster = MarkerCluster(name="⭐ Top 40 cells", show=True)

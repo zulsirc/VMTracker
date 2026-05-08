@@ -3,104 +3,104 @@
   <Document>
     <name>Vending Machine — Top Clusters</name>
     <Placemark>
-      <name>Cluster #1 — Glória</name>
+      <name>Cluster #1 — Granja dos Cavaleiros</name>
       <description><![CDATA[
-        Cells: 9<br/>
-        Score mean: 98.7<br/>
+        Cells: 41<br/>
+        Score mean: 94.5<br/>
         Score max: 100.0<br/>
-        Radius: 699 m
+        Radius: 593 m
       ]]></description>
-      <Point><coordinates>-41.795830,-22.402334,0</coordinates></Point>
+      <Point><coordinates>-41.798432,-22.399330,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #2 — Nova Holanda</name>
+      <name>Cluster #2 — Glória</name>
       <description><![CDATA[
-        Cells: 8<br/>
-        Score mean: 94.9<br/>
+        Cells: 38<br/>
+        Score mean: 95.4<br/>
         Score max: 99.5<br/>
-        Radius: 607 m
+        Radius: 496 m
       ]]></description>
-      <Point><coordinates>-41.804715,-22.402802,0</coordinates></Point>
+      <Point><coordinates>-41.790451,-22.397357,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #3 — Morro de São Jorge</name>
+      <name>Cluster #3 — Bosque Azul</name>
       <description><![CDATA[
-        Cells: 11<br/>
-        Score mean: 82.8<br/>
-        Score max: 99.6<br/>
-        Radius: 571 m
+        Cells: 36<br/>
+        Score mean: 94.5<br/>
+        Score max: 99.9<br/>
+        Radius: 485 m
       ]]></description>
-      <Point><coordinates>-41.799757,-22.393019,0</coordinates></Point>
+      <Point><coordinates>-41.801733,-22.405858,0</coordinates></Point>
     </Placemark>
     <Placemark>
       <name>Cluster #4 — Glória</name>
       <description><![CDATA[
-        Cells: 8<br/>
-        Score mean: 91.0<br/>
-        Score max: 99.3<br/>
-        Radius: 533 m
+        Cells: 37<br/>
+        Score mean: 88.7<br/>
+        Score max: 99.7<br/>
+        Radius: 476 m
       ]]></description>
-      <Point><coordinates>-41.788813,-22.395441,0</coordinates></Point>
+      <Point><coordinates>-41.794043,-22.405671,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #5 — Cavaleiros</name>
+      <name>Cluster #5 — Nova Holanda</name>
       <description><![CDATA[
-        Cells: 9<br/>
-        Score mean: 81.8<br/>
-        Score max: 98.1<br/>
-        Radius: 599 m
+        Cells: 36<br/>
+        Score mean: 83.6<br/>
+        Score max: 90.4<br/>
+        Radius: 652 m
       ]]></description>
-      <Point><coordinates>-41.798394,-22.410443,0</coordinates></Point>
+      <Point><coordinates>-41.808556,-22.402872,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #6 — Nova Holanda</name>
+      <name>Cluster #6 — Bosque Azul</name>
       <description><![CDATA[
-        Cells: 10<br/>
-        Score mean: 78.2<br/>
-        Score max: 88.7<br/>
-        Radius: 650 m
+        Cells: 43<br/>
+        Score mean: 73.7<br/>
+        Score max: 86.4<br/>
+        Radius: 549 m
       ]]></description>
-      <Point><coordinates>-41.811657,-22.397076,0</coordinates></Point>
+      <Point><coordinates>-41.809716,-22.410421,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #7 — Bosque Azul</name>
+      <name>Cluster #7 — Nova Holanda</name>
       <description><![CDATA[
-        Cells: 10<br/>
-        Score mean: 67.9<br/>
-        Score max: 84.6<br/>
-        Radius: 520 m
+        Cells: 37<br/>
+        Score mean: 77.0<br/>
+        Score max: 82.5<br/>
+        Radius: 559 m
       ]]></description>
-      <Point><coordinates>-41.808004,-22.412894,0</coordinates></Point>
+      <Point><coordinates>-41.812074,-22.397002,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #8 — Glória</name>
+      <name>Cluster #8 — Nova Holanda</name>
       <description><![CDATA[
-        Cells: 6<br/>
-        Score mean: 81.7<br/>
-        Score max: 94.8<br/>
-        Radius: 462 m
+        Cells: 30<br/>
+        Score mean: 75.9<br/>
+        Score max: 81.1<br/>
+        Radius: 430 m
       ]]></description>
-      <Point><coordinates>-41.787859,-22.404625,0</coordinates></Point>
+      <Point><coordinates>-41.816739,-22.402139,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #9 — Aroeira</name>
+      <name>Cluster #9 — Morro de São Jorge</name>
       <description><![CDATA[
-        Cells: 7<br/>
-        Score mean: 74.7<br/>
-        Score max: 85.0<br/>
-        Radius: 544 m
+        Cells: 32<br/>
+        Score mean: 72.0<br/>
+        Score max: 80.1<br/>
+        Radius: 514 m
       ]]></description>
-      <Point><coordinates>-41.791245,-22.388631,0</coordinates></Point>
+      <Point><coordinates>-41.806756,-22.393170,0</coordinates></Point>
     </Placemark>
     <Placemark>
-      <name>Cluster #10 — Bosque Azul</name>
+      <name>Cluster #10 — Aroeira</name>
       <description><![CDATA[
-        Cells: 5<br/>
-        Score mean: 78.7<br/>
-        Score max: 82.1<br/>
-        Radius: 385 m
+        Cells: 23<br/>
+        Score mean: 79.7<br/>
+        Score max: 91.0<br/>
+        Radius: 460 m
       ]]></description>
-      <Point><coordinates>-41.813343,-22.404072,0</coordinates></Point>
+      <Point><coordinates>-41.787807,-22.392019,0</coordinates></Point>
     </Placemark>
   </Document>
 </kml>

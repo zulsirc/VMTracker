@@ -181,6 +181,36 @@ def run(cfg: dict[str, Any]) -> dict[str, Any]:
     if not layers["roads"].empty:
         layers["roads"] = G.clip_to_polygon(layers["roads"], poly)
 
+    # --- Water mask: drop cells over the sea / lagoa --------------------
+    water_cfg = cfg["study_area"].get("water_mask", {})
+    if water_cfg.get("enabled", True):
+        water_polys_raw = []
+        # `unsuitable` already includes natural=water + natural=wetland
+        unsuit = layers["landuse_layers"].get("unsuitable")
+        if unsuit is not None and not unsuit.empty:
+            water_polys_raw.append(unsuit)
+        # also fetch a dedicated water layer to be safe (if available)
+        try:
+            water_data = ds.fetch_landuse(
+                "water_only",
+                ["natural=water", "natural=coastline", "place=sea", "natural=bay"],
+            )
+            water_only = G.polygons_from_overpass(water_data)
+            if not water_only.empty:
+                water_only = G.clip_to_polygon(water_only, poly)
+                water_polys_raw.append(water_only)
+        except Exception as exc:
+            LOG.warning("water_only fetch failed: %s", exc)
+        if water_polys_raw:
+            water_combined = pd.concat(water_polys_raw, ignore_index=True)
+            water_combined = gpd.GeoDataFrame(water_combined, crs="EPSG:4326")
+            before = len(grid)
+            grid = G.mask_water_cells(
+                grid, water_combined,
+                overlap_threshold=float(water_cfg.get("overlap_threshold", 0.40)),
+            )
+            LOG.info("water mask: %d → %d cells", before, len(grid))
+
     # --- Features ------------------------------------------------------
     poi_counts = FEAT.compute_poi_counts(grid, layers["poi_layers"])
     road_df = FEAT.compute_road_density(grid, layers["roads"])

@@ -31,26 +31,34 @@ city:
 study_area:
   bbox:
     # Rough outer bbox used ONLY to narrow Overpass queries.
-    # Real clip is done by the polygon below.
+    # Real clip is done by the polygon below + the water mask.
     min_lon: -41.830
     min_lat: -22.470
     max_lon: -41.735
     max_lat: -22.370
   polygon:
     # [lon, lat] pairs — south-side urban core of Macaé.
-    # East edge hugs the coastline (no open-ocean cells).
-    - [-41.830, -22.468]  # SW
-    - [-41.790, -22.465]  # S, following the coast
-    - [-41.783, -22.455]  # Riviera / Costa do Sol
-    - [-41.780, -22.442]  # Praia Campista
-    - [-41.783, -22.425]  # Cavaleiros beach
-    - [-41.785, -22.410]  # Cavaleiros norte
-    - [-41.785, -22.395]  # Imbetiba
-    - [-41.783, -22.387]  # near river mouth (south bank)
-    - [-41.800, -22.386]  # south of Ponte da Barra
-    - [-41.815, -22.395]  # western bank, south of river
-    - [-41.830, -22.410]  # W
-    - [-41.830, -22.468]  # close
+    # East edge hugs the coastline tighter than before so few maritime
+    # cells slip through; the water-mask below catches the rest (lagoa
+    # Imboassica, river mouth, sea).
+    - [-41.825, -22.460]  # SW (avoid pure beach south of Lagomar)
+    - [-41.795, -22.460]  # S
+    - [-41.785, -22.452]  # Riviera / Costa do Sol
+    - [-41.781, -22.440]  # Praia Campista (coast)
+    - [-41.781, -22.425]  # Cavaleiros beach
+    - [-41.783, -22.413]  # Cavaleiros norte
+    - [-41.785, -22.402]  # Imbetiba
+    - [-41.785, -22.395]  # Aroeira / Imbetiba sul
+    - [-41.787, -22.388]  # near river mouth (south bank)
+    - [-41.802, -22.388]  # south of Ponte da Barra
+    - [-41.812, -22.392]  # western bank, south of river
+    - [-41.825, -22.405]  # W
+    - [-41.825, -22.460]  # close
+  # Drop cells whose centroid is in OSM natural=water OR whose area
+  # overlap with water exceeds this fraction.
+  water_mask:
+    enabled: true
+    overlap_threshold: 0.30
 
 # ----------------------------------------------------------------------------
 # Grid (H3 hexagons)
@@ -59,7 +67,9 @@ study_area:
 # res 10 ≈ 66m  edge / ~0.015 km²         — finer, but heavier
 grid:
   type: "h3"
-  h3_resolution: 9
+  # res 9  ≈ 174m edge / ~0.10 km² per cell
+  # res 10 ≈ 66m  edge / ~0.015 km² per cell — finer (default; user wants block-level detail)
+  h3_resolution: 10
 
 # ----------------------------------------------------------------------------
 # Overpass / data sources
@@ -235,19 +245,20 @@ weights:
 # attenuated by 'decay' per ring.
 # ----------------------------------------------------------------------------
 smoothing:
-  neighbor_rings: 3
-  decay: 0.6
+  # At res 10 each ring is ~130m. Walk-radius ~600m → ~5 rings.
+  neighbor_rings: 5
+  decay: 0.7
 
 # ----------------------------------------------------------------------------
 # Cluster building (for prospection)
 # ----------------------------------------------------------------------------
 clusters:
   score_threshold: 55.0   # cells with score >= this become eligible
-  min_cells: 2            # cluster must have at least this many cells
+  min_cells: 4            # smaller res 10 cells need a higher floor to qualify
   top_n: 10               # how many clusters to surface in shortlist / map / KML
-  peak_radius_rings: 2    # min H3 distance between two seeds (≈ ~350m)
+  peak_radius_rings: 5    # min H3 distance between two seeds at res 10 (~ ~600m)
   super_cluster_merge_m: 650.0     # merge micro-clusters if centroid distance <= this
-  super_cluster_seed_rings: 3      # OR if their seed cells are <= N H3 rings apart
+  super_cluster_seed_rings: 8      # OR if their seeds are <= N H3 rings apart (res 10 → ~1.0km)
 
 # ----------------------------------------------------------------------------
 # Operational scenario

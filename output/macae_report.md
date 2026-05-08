@@ -14,65 +14,65 @@ O mapa representa uma **heurística espacial** de potencial de prospecção para
 
 ## Área de estudo
 
-Polígono customizado (vértices: 12), cobrindo a área urbana consolidada do lado principal antes da Ponte da Barra. Barra de Macaé (outro lado), aeroporto e periferia rural ficam excluídos do recorte principal.
+Polígono customizado (vértices: 13), cobrindo a área urbana consolidada do lado principal antes da Ponte da Barra. Barra de Macaé (outro lado), aeroporto e periferia rural ficam excluídos do recorte principal.
 
 
 ## Estatísticas da malha
 
-- **cells total**: 357
-- **score min**: 0.08
-- **score mean**: 41.96
-- **score median**: 30.0
+- **cells total**: 1942
+- **score min**: 0.02
+- **score mean**: 34.0
+- **score median**: 24.05
 - **score max**: 100.0
-- **cells >= 60 (bom+)**: 84
-- **cells >= 80 (muito bom)**: 45
-- **POIs total**: 296
-- **road segments**: 530
+- **cells >= 60 (bom+)**: 447
+- **cells >= 80 (muito bom)**: 222
+- **POIs total**: 287
+- **road segments**: 485
 
 ## Top áreas (ranking)
 
 | rank | score | class | h3 | lat | lon |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 100.000 | muito bom | 89a8b1a2637ffff | -22.402 | -41.795 |
-| 2 | 99.916 | muito bom | 89a8b1a20cbffff | -22.401 | -41.799 |
-| 3 | 99.832 | muito bom | 89a8b1a2627ffff | -22.399 | -41.795 |
-| 4 | 99.748 | muito bom | 89a8b1a2623ffff | -22.401 | -41.792 |
-| 5 | 99.664 | muito bom | 89a8b1a20dbffff | -22.404 | -41.799 |
-| 6 | 99.580 | muito bom | 89a8b1a2053ffff | -22.397 | -41.798 |
-| 7 | 99.496 | muito bom | 89a8b1a20c3ffff | -22.402 | -41.802 |
-| 8 | 99.412 | muito bom | 89a8b1a20d3ffff | -22.405 | -41.802 |
-| 9 | 99.328 | muito bom | 89a8b1a262fffff | -22.398 | -41.792 |
-| 10 | 99.244 | muito bom | 89a8b1a20cfffff | -22.399 | -41.802 |
-| 11 | 99.160 | muito bom | 89a8b1a26afffff | -22.405 | -41.796 |
-| 12 | 99.049 | muito bom | 89a8b1a205bffff | -22.396 | -41.795 |
-| 13 | 98.199 | muito bom | 89a8b1a2633ffff | -22.404 | -41.792 |
-| 14 | 98.084 | muito bom | 89a8b1a26a7ffff | -22.407 | -41.799 |
-| 15 | 97.947 | muito bom | 89a8b1a262bffff | -22.399 | -41.789 |
-| 16 | 97.118 | muito bom | 89a8b1a20d7ffff | -22.404 | -41.805 |
-| 17 | 96.957 | muito bom | 89a8b1a20c7ffff | -22.400 | -41.805 |
-| 18 | 94.889 | muito bom | 89a8b1a2043ffff | -22.394 | -41.798 |
-| 19 | 94.754 | muito bom | 89a8b1a263bffff | -22.402 | -41.789 |
-| 20 | 94.614 | muito bom | 89a8b1a246fffff | -22.407 | -41.805 |
-| 21 | 94.164 | muito bom | 89a8b1a2293ffff | -22.396 | -41.789 |
-| 22 | 93.491 | muito bom | 89a8b1a2297ffff | -22.394 | -41.792 |
-| 23 | 92.967 | muito bom | 89a8b1a246bffff | -22.408 | -41.802 |
-| 24 | 92.511 | muito bom | 89a8b1a26abffff | -22.407 | -41.793 |
-| 25 | 91.995 | muito bom | 89a8b1a2057ffff | -22.396 | -41.801 |
-| 26 | 91.739 | muito bom | 89a8b1a208bffff | -22.402 | -41.808 |
-| 27 | 90.868 | muito bom | 89a8b1a204bffff | -22.393 | -41.795 |
-| 28 | 90.208 | muito bom | 89a8b1a201bffff | -22.397 | -41.805 |
-| 29 | 90.027 | muito bom | 89a8b1a26a3ffff | -22.408 | -41.796 |
-| 30 | 89.602 | muito bom | 89a8b1a2667ffff | -22.398 | -41.786 |
-| 31 | 89.439 | muito bom | 89a8b1a209bffff | -22.405 | -41.808 |
-| 32 | 88.706 | muito bom | 89a8b1a2013ffff | -22.399 | -41.808 |
-| 33 | 88.413 | muito bom | 89a8b1a2607ffff | -22.405 | -41.789 |
-| 34 | 87.620 | muito bom | 89a8b1a26b7ffff | -22.410 | -41.799 |
-| 35 | 86.646 | muito bom | 89a8b1a2283ffff | -22.393 | -41.789 |
-| 36 | 85.948 | muito bom | 89a8b1a229bffff | -22.395 | -41.786 |
-| 37 | 85.172 | muito bom | 89a8b1a2677ffff | -22.401 | -41.786 |
-| 38 | 84.952 | muito bom | 89a8b1a2287ffff | -22.391 | -41.792 |
-| 39 | 84.588 | muito bom | 89a8b1a2467ffff | -22.408 | -41.808 |
-| 40 | 82.858 | muito bom | 89a8b1a2463ffff | -22.410 | -41.805 |
+| 1 | 100.000 | muito bom | 8aa8b1a20c9ffff | -22.399 | -41.798 |
+| 2 | 99.985 | muito bom | 8aa8b1a20c97fff | -22.400 | -41.797 |
+| 3 | 99.969 | muito bom | 8aa8b1a2626ffff | -22.399 | -41.797 |
+| 4 | 99.954 | muito bom | 8aa8b1a20c87fff | -22.401 | -41.799 |
+| 5 | 99.938 | muito bom | 8aa8b1a26267fff | -22.400 | -41.796 |
+| 6 | 99.923 | muito bom | 8aa8b1a2634ffff | -22.401 | -41.796 |
+| 7 | 99.907 | muito bom | 8aa8b1a20537fff | -22.398 | -41.798 |
+| 8 | 99.892 | muito bom | 8aa8b1a20daffff | -22.404 | -41.800 |
+| 9 | 99.876 | muito bom | 8aa8b1a2635ffff | -22.401 | -41.795 |
+| 10 | 99.861 | muito bom | 8aa8b1a20ca7fff | -22.402 | -41.799 |
+| 11 | 99.846 | muito bom | 8aa8b1a20d8ffff | -22.403 | -41.799 |
+| 12 | 99.830 | muito bom | 8aa8b1a20d1ffff | -22.404 | -41.801 |
+| 13 | 99.815 | muito bom | 8aa8b1a20d17fff | -22.405 | -41.800 |
+| 14 | 99.799 | muito bom | 8aa8b1a26247fff | -22.399 | -41.795 |
+| 15 | 99.784 | muito bom | 8aa8b1a20cb7fff | -22.401 | -41.798 |
+| 16 | 99.768 | muito bom | 8aa8b1a26347fff | -22.402 | -41.795 |
+| 17 | 99.753 | muito bom | 8aa8b1a26277fff | -22.400 | -41.795 |
+| 18 | 99.737 | muito bom | 8aa8b1a20d87fff | -22.404 | -41.799 |
+| 19 | 99.722 | muito bom | 8aa8b1a20d9ffff | -22.403 | -41.798 |
+| 20 | 99.706 | muito bom | 8aa8b1a20da7fff | -22.405 | -41.799 |
+| 21 | 99.691 | muito bom | 8aa8b1a2636ffff | -22.402 | -41.797 |
+| 22 | 99.676 | muito bom | 8aa8b1a26357fff | -22.402 | -41.794 |
+| 23 | 99.660 | muito bom | 8aa8b1a20c8ffff | -22.400 | -41.799 |
+| 24 | 99.645 | muito bom | 8aa8b1a20d97fff | -22.403 | -41.797 |
+| 25 | 99.629 | muito bom | 8aa8b1a20caffff | -22.401 | -41.800 |
+| 26 | 99.614 | muito bom | 8aa8b1a20d07fff | -22.405 | -41.802 |
+| 27 | 99.598 | muito bom | 8aa8b1a20db7fff | -22.405 | -41.798 |
+| 28 | 99.583 | muito bom | 8aa8b1a26377fff | -22.403 | -41.795 |
+| 29 | 99.567 | muito bom | 8aa8b1a26257fff | -22.399 | -41.794 |
+| 30 | 99.552 | muito bom | 8aa8b1a2624ffff | -22.398 | -41.796 |
+| 31 | 99.537 | muito bom | 8aa8b1a20d0ffff | -22.404 | -41.803 |
+| 32 | 99.521 | muito bom | 8aa8b1a20c27fff | -22.403 | -41.802 |
+| 33 | 99.506 | muito bom | 8aa8b1a26a4ffff | -22.406 | -41.800 |
+| 34 | 99.490 | muito bom | 8aa8b1a2622ffff | -22.401 | -41.794 |
+| 35 | 99.475 | muito bom | 8aa8b1a2620ffff | -22.400 | -41.793 |
+| 36 | 99.459 | muito bom | 8aa8b1a26367fff | -22.403 | -41.796 |
+| 37 | 99.444 | muito bom | 8aa8b1a20c07fff | -22.402 | -41.802 |
+| 38 | 99.428 | muito bom | 8aa8b1a26a5ffff | -22.406 | -41.798 |
+| 39 | 99.413 | muito bom | 8aa8b1a2630ffff | -22.403 | -41.793 |
+| 40 | 99.398 | muito bom | 8aa8b1a2625ffff | -22.398 | -41.795 |
 
 ## Limitações
 

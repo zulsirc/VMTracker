@@ -200,6 +200,38 @@ def road_length_per_cell(
 # ----------------------------------------------------------------------------
 # Landuse polygon union (for unsuitable-area penalty)
 # ----------------------------------------------------------------------------
+def mask_water_cells(
+    grid: gpd.GeoDataFrame,
+    water_gdf: gpd.GeoDataFrame,
+    overlap_threshold: float = 0.4,
+) -> gpd.GeoDataFrame:
+    """Drop cells that are mostly over water.
+
+    A cell is dropped if EITHER:
+      - its centroid falls inside a water polygon, OR
+      - more than `overlap_threshold` of its area is covered by water.
+    """
+    if water_gdf is None or water_gdf.empty or grid.empty:
+        return grid
+    water_m = water_gdf.to_crs(3857)
+    try:
+        water_union = unary_union(water_m.geometry.values)
+    except Exception:
+        return grid
+    if water_union.is_empty:
+        return grid
+
+    grid_m = grid.to_crs(3857)
+    cell_area = grid_m.geometry.area.replace(0, np.nan)
+    overlap_area = grid_m.geometry.intersection(water_union).area
+    overlap_frac = (overlap_area / cell_area).fillna(0.0)
+    centroid_in_water = grid_m.geometry.representative_point().within(water_union)
+
+    keep = (~centroid_in_water.values) & (overlap_frac.values < overlap_threshold)
+    out = grid.loc[keep].copy().reset_index(drop=True)
+    return out
+
+
 def polygons_from_overpass(data: dict[str, Any]) -> gpd.GeoDataFrame:
     """Best-effort polygon extraction for Overpass ways/relations with 'geometry'."""
     rows = []
